@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+/*
+    Definition of services related to invoice creation
+*/
+
+message Invoice {
+    //Data XML file data from Finvoice 1.3 Standard
+    bytes Data = 1;
+    //Issuer_id Specification UUID type (This identifier is a 128-bit)
+    uint32 Issuer_id = 2;
+    //Attachments are optional pdf files
+    repeated bytes Attachments = 3;
+}
+
+
+message InvoicePreview {
+    bytes Preview = 2;
+}
+
+//Attachment pdf files to be sent through stream
+message Attachment {
+    bytes Content = 1;
+}
+
+
+//Status Enumeration
+enum eStatus {
+    Error = 0;
+    Ok = 1;
+}
+//Response for Invoice services
+message Response {
+    eStatus Status = 1;
+    string Description = 2;
+}
+
+service InvoiceUploader {
+    //Service to create XML Invoice
+    rpc CreateXMLInvoice(Invoice) returns (Response) {}
+
+    //Service to upload invoice preview as a stream
+    rpc UpdateInvoicePreview(stream InvoicePreview) returns (Response) {}
+
+    //Service to upload invoice attachment as a stream
+    rpc UpdateAttachment(stream Attachment) returns (Response) {}
+}
+

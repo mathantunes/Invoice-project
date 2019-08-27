@@ -1,8 +1,33 @@
 syntax = "proto3";
-
+package services;
 /*
     Definition of services related to invoice creation
 */
+
+service InvoiceUploader {
+    //Service to create XML Invoice
+    rpc CreateXMLInvoice(Invoice) returns (Response) {}
+
+    //Service to upload invoice preview as a stream
+    rpc UpdateInvoicePreview(stream InvoicePreview) returns (Response) {}
+
+    //Service to upload invoice attachment as a stream
+    rpc UpdateAttachment(stream Attachment) returns (Response) {}
+}
+
+service InvoiceGetter {
+    rpc GetInvoicePreview(int) returns (stream InvoicePreview) {}
+
+    rpc ListAttachments(int) returns () {}
+
+    rpc GetAttachment(int) returns () {}
+}
+
+
+enum InvoiceType {
+    AP = 0;
+    AR = 1;
+}
 
 message Invoice {
     //Data XML file data from Finvoice 1.3 Standard
@@ -11,6 +36,8 @@ message Invoice {
     uint32 Issuer_id = 2;
     //Attachments are optional pdf files
     repeated bytes Attachments = 3;
+    //Type defines the Invoice Type
+    InvoiceType Type = 4;
 }
 
 
@@ -35,14 +62,7 @@ message Response {
     string Description = 2;
 }
 
-service InvoiceUploader {
-    //Service to create XML Invoice
-    rpc CreateXMLInvoice(Invoice) returns (Response) {}
 
-    //Service to upload invoice preview as a stream
-    rpc UpdateInvoicePreview(stream InvoicePreview) returns (Response) {}
 
-    //Service to upload invoice attachment as a stream
-    rpc UpdateAttachment(stream Attachment) returns (Response) {}
-}
+
 

@@ -22,8 +22,10 @@ const (
 	VIESEndpoint = "http://ec.europa.eu/taxation_customs/vies/services/checkVatService"
 )
 
+type VIESValidator struct{}
+
 // Validate Communicates with VIES API
-func Validate(countryCode, vatNumber string) (ValidationResponse, error) {
+func (v *VIESValidator) Validate(countryCode, vatNumber string) (ValidationResponse, error) {
 
 	//Generate request from input parameters
 	requestPayload := createRequest(countryCode, vatNumber)

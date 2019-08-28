@@ -60,7 +60,8 @@ func TestValidate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Validate(tt.args.countryCode, tt.args.vatNumber)
+			v := &VIESValidator{}
+			got, err := v.Validate(tt.args.countryCode, tt.args.vatNumber)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Validate() error = %v, wantErr %v", err, tt.wantErr)
 				return

@@ -2,6 +2,11 @@ package validator
 
 import "encoding/xml"
 
+// Validator Interface implemented by validators
+type Validator interface {
+	Validate(countryCode, vatNumber string) (ValidationResponse, error)
+}
+
 // ValidationVAT Response message for valid responses from VIES
 type ValidationVAT struct {
 	CountryCode string `xml:"countryCode"`

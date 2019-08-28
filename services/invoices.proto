@@ -23,7 +23,7 @@ service InvoiceGetter {
     rpc GetAttachment(int) returns () {}
 }
 
-
+//Identifies the AP or AR Invoice Types
 enum InvoiceType {
     AP = 0;
     AR = 1;

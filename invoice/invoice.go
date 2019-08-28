@@ -12,21 +12,22 @@ import (
 	"golang.org/x/net/html/charset"
 )
 
-type invoiceUploaderServer struct {
+// UploaderServer Holds the GRPC server implementation
+type UploaderServer struct {
 }
 
-func (sv *invoiceUploaderServer) CreateXMLInvoice(ctx context.Context, req *services.Invoice) (*services.Response, error) {
+func (sv *UploaderServer) CreateXMLInvoice(ctx context.Context, req *services.Invoice) (*services.Response, error) {
 
 	return nil, nil
 
 }
 
-func (sv *invoiceUploaderServer) UpdateInvoicePreview(srv services.InvoiceUploader_UpdateInvoicePreviewServer) error {
+func (sv *UploaderServer) UpdateInvoicePreview(srv services.InvoiceUploader_UpdateInvoicePreviewServer) error {
 	return nil
 
 }
 
-func (sv *invoiceUploaderServer) UpdateAttachment(srv services.InvoiceUploader_UpdateAttachmentServer) error {
+func (sv *UploaderServer) UpdateAttachment(srv services.InvoiceUploader_UpdateAttachmentServer) error {
 	return nil
 
 }

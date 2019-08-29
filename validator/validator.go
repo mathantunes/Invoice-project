@@ -22,10 +22,11 @@ const (
 	VIESEndpoint = "http://ec.europa.eu/taxation_customs/vies/services/checkVatService"
 )
 
+// VIESValidator Implements the VIES Validation
 type VIESValidator struct{}
 
 // Validate Communicates with VIES API
-func (v *VIESValidator) Validate(countryCode, vatNumber string) (ValidationResponse, error) {
+func (v *VIESValidator) Validate(countryCode, vatNumber string) (bool, error) {
 
 	//Generate request from input parameters
 	requestPayload := createRequest(countryCode, vatNumber)
@@ -36,7 +37,7 @@ func (v *VIESValidator) Validate(countryCode, vatNumber string) (ValidationRespo
 	//Start HTTP Requester
 	req, err := http.NewRequest(http.MethodPost, VIESEndpoint, bytes.NewReader(requestPayload))
 	if err != nil {
-		return ValidationResponse{}, err
+		return false, err
 	}
 	req.Header.Set("Content-type", "text/xml")
 	req.Header.Set("SOAPAction", soapAction)
@@ -53,17 +54,17 @@ func (v *VIESValidator) Validate(countryCode, vatNumber string) (ValidationRespo
 	//Make the HTTP Request
 	res, err := client.Do(req)
 	if err != nil {
-		return ValidationResponse{}, err
+		return false, err
 	}
 
 	//Parse response XML into ValidationResponse Struct
 	validationResponse := new(ValidationResponse)
 	err = xml.NewDecoder(res.Body).Decode(validationResponse)
 	if err != nil {
-		return ValidationResponse{}, err
+		return false, err
 	}
 
-	return *validationResponse, nil
+	return validationResponse.Body.CheckVat.Valid, nil
 }
 
 // createRequest Generates the Request Message Payload

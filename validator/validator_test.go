@@ -13,48 +13,25 @@ func TestValidate(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    ValidationResponse
+		want    bool
 		wantErr bool
 	}{
 		{
-			name: "Valid Request from FINLAND",
-			args: args{"FI", "25160553"},
-			want: ValidationResponse{
-				Body: ValidationBody{
-					CheckVat: ValidationVAT{
-						CountryCode: "FI",
-						VatNumber:   "25160553",
-						RequestDate: "2019-08-28+02:00",
-						Valid:       true,
-						Name:        "Comtower Finland Oy",
-						Address:     `Sibeliuksenkatu 3 08100 LOHJA`,
-					},
-				},
-			},
+			name:    "Valid Request from FINLAND",
+			args:    args{"FI", "25160553"},
+			want:    true,
 			wantErr: false,
 		},
 		{
-			name: "Invalid VAT Request from FINLAND",
-			args: args{"FI", "000000"},
-			want: ValidationResponse{
-				Body: ValidationBody{
-					CheckVat: ValidationVAT{
-						Valid: false,
-					},
-				},
-			},
+			name:    "Invalid VAT Request from FINLAND",
+			args:    args{"FI", "000000"},
+			want:    false,
 			wantErr: false,
 		},
 		{
-			name: "Invalid Parameters on Request",
-			args: args{"", "0"},
-			want: ValidationResponse{
-				Body: ValidationBody{
-					Fault: ValidationFault{
-						FaultString: "INVALID_INPUT",
-					},
-				},
-			},
+			name:    "Invalid Parameters on Request",
+			args:    args{"", "0"},
+			want:    false,
 			wantErr: false,
 		},
 	}
@@ -66,11 +43,8 @@ func TestValidate(t *testing.T) {
 				t.Errorf("Validate() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got.Body.CheckVat.Valid, tt.want.Body.CheckVat.Valid) {
-				t.Errorf("Validate() = %v, want %v", got.Body.CheckVat.Valid, tt.want.Body.CheckVat.Valid)
-			}
-			if !reflect.DeepEqual(got.Body.Fault.FaultString, tt.want.Body.Fault.FaultString) {
-				t.Errorf("Validate() = %v, want %v", got.Body.Fault.FaultString, tt.want.Body.Fault.FaultString)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Validate() = %v, want %v", got, tt)
 			}
 		})
 	}

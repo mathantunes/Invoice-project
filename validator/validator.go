@@ -26,7 +26,7 @@ const (
 type VIESValidator struct{}
 
 // Validate Communicates with VIES API
-func (v *VIESValidator) Validate(countryCode, vatNumber string) (bool, error) {
+func (v *VIESValidator) Validate(countryCode, vatNumber string) (InternalResponse, error) {
 
 	//Generate request from input parameters
 	requestPayload := createRequest(countryCode, vatNumber)
@@ -64,7 +64,11 @@ func (v *VIESValidator) Validate(countryCode, vatNumber string) (bool, error) {
 		return false, err
 	}
 
-	return validationResponse.Body.CheckVat.Valid, nil
+	resp := InternalResponse{
+		validationResponse.Body.CheckVat.Valid,
+		validationResponse.Body.CheckVat.Name,
+	}
+	return resp, nil
 }
 
 // createRequest Generates the Request Message Payload

@@ -4,7 +4,7 @@ import "encoding/xml"
 
 // Validator Interface implemented by validators
 type Validator interface {
-	Validate(countryCode, vatNumber string) (ValidationResponse, error)
+	Validate(countryCode, vatNumber string) (InternalResponse, error)
 }
 
 // ValidationVAT Response message for valid responses from VIES
@@ -34,4 +34,10 @@ type ValidationBody struct {
 type ValidationResponse struct {
 	XMLName xml.Name
 	Body    ValidationBody
+}
+
+// InternalResponse to service caller
+type InternalResponse struct {
+	Valid       bool
+	CompanyName string
 }

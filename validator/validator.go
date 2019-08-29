@@ -37,7 +37,7 @@ func (v *VIESValidator) Validate(countryCode, vatNumber string) (InternalRespons
 	//Start HTTP Requester
 	req, err := http.NewRequest(http.MethodPost, VIESEndpoint, bytes.NewReader(requestPayload))
 	if err != nil {
-		return false, err
+		return InternalResponse{}, err
 	}
 	req.Header.Set("Content-type", "text/xml")
 	req.Header.Set("SOAPAction", soapAction)
@@ -54,14 +54,14 @@ func (v *VIESValidator) Validate(countryCode, vatNumber string) (InternalRespons
 	//Make the HTTP Request
 	res, err := client.Do(req)
 	if err != nil {
-		return false, err
+		return InternalResponse{}, err
 	}
 
 	//Parse response XML into ValidationResponse Struct
 	validationResponse := new(ValidationResponse)
 	err = xml.NewDecoder(res.Body).Decode(validationResponse)
 	if err != nil {
-		return false, err
+		return InternalResponse{}, err
 	}
 
 	resp := InternalResponse{

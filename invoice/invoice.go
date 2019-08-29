@@ -1,72 +1,104 @@
 package invoice
 
 import (
-	"bytes"
 	"context"
-	"encoding/xml"
 	"fmt"
-	"strconv"
-	"strings"
+	"sync"
 
+	"github.com/golang/protobuf/proto"
+	"github.com/mathantunes/arex_project/queuer"
 	services "github.com/mathantunes/arex_project/services"
-	"golang.org/x/net/html/charset"
+	"github.com/mathantunes/arex_project/validator"
 )
 
 // UploaderServer Holds the GRPC server implementation
 type UploaderServer struct {
+	validator.Validator
+	queuer.QueueManager
 }
 
+const (
+	// CreateInvoiceQueue Queue Name
+	CreateInvoiceQueue = "create_invoice"
+	// UpdateInvoiceQueue Queue Name
+	UpdateInvoiceQueue = "update_invoice"
+)
+
+// CreateXMLInvoice Accepts an Invoice Structure and parses all needed fields
+// Calls VAT validator and sends Protobuf payload to SQS
 func (sv *UploaderServer) CreateXMLInvoice(ctx context.Context, req *services.Invoice) (*services.Response, error) {
 
-	return nil, nil
+	//Get invoice data from XML
+	invoice, err := parseInvoiceInfo(req)
+	if err != nil {
+		return nil, err
+	}
 
+	//WaitGroup allows Validation and Queuing to happen
+	//concurrently whilst waiting for both to finish before ending the service
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	// //Initialize SQS Connection
+	// err = sv.Init()
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	// Helper function to queue invoice concurrently
+	queueInvoice := func(wg *sync.WaitGroup, queueName string) error {
+		//Get Queue URL for Creating Invoice
+		url, err := sv.GetQueueURL(queueName)
+		if err != nil {
+			return err
+		}
+
+		//Marshal Payload as Protobuf serialization
+		payload, err := proto.Marshal(invoice)
+		err = sv.WriteToQueue(url, payload)
+		if err != nil {
+			return err
+		}
+		wg.Done()
+		return nil
+	}
+
+	//Start Creating Invoice on Queue
+	go func() {
+		err = queueInvoice(&wg, CreateInvoiceQueue)
+		if err != nil {
+			//Allow for retry
+			fmt.Println(err)
+		}
+	}()
+
+	//Start Validation
+	validation, err := sv.Validate(invoice.CounterPartyCountry, invoice.CounterPartyVAT)
+	if err != nil {
+		return nil, err
+	}
+	invoice.ValidVAT = validation
+	//Start Creating Invoice Update on Queue
+	go func() {
+		err = queueInvoice(&wg, UpdateInvoiceQueue)
+		if err != nil {
+			//Allow for retry
+			fmt.Println(err)
+		}
+	}()
+	wg.Wait()
+
+	return nil, nil
 }
 
+// UpdateInvoicePreview Queues the Update
 func (sv *UploaderServer) UpdateInvoicePreview(srv services.InvoiceUploader_UpdateInvoicePreviewServer) error {
 	return nil
 
 }
 
+// UpdateAttachment Queues the Update
 func (sv *UploaderServer) UpdateAttachment(srv services.InvoiceUploader_UpdateAttachmentServer) error {
 	return nil
 
-}
-
-func parseInvoiceInfo(inv *services.Invoice) (*Invoice, error) {
-	invoiceData := inv.GetData()
-
-	if invoiceData == nil {
-		return nil, fmt.Errorf("Invoice received for customer %v is invalid", inv.GetIssuerId())
-	}
-
-	invoiceXML, err := parseInvoiceXML(invoiceData)
-	if err != nil {
-		return nil, err
-	}
-
-	invoice := Invoice{
-		Currency:      invoiceXML.Details.TotalVAT.Currency,
-		CustomerID:    uint16(inv.GetIssuerId()),
-		DueDate:       invoiceXML.Details.PaymentDetails.DueDate,
-		InvoiceNumber: invoiceXML.Details.InvoiceNumber,
-		IssueDate:     invoiceXML.Details.IssueDate,
-	}
-	intFaceValue, err := strconv.Atoi(strings.Replace(invoiceXML.Details.FaceValue, ",", "", -1))
-	if err != nil {
-		return nil, err
-	}
-
-	invoice.FaceValue = intFaceValue * 100
-
-	return &Invoice{}, nil
-}
-
-func parseInvoiceXML(data []byte) (invoiceXML, error) {
-	invoice := new(invoiceXML)
-
-	decoder := xml.NewDecoder(bytes.NewReader(data))
-	decoder.CharsetReader = charset.NewReaderLabel
-	err := decoder.Decode(invoice)
-
-	return *invoice, err
 }

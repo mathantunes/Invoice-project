@@ -2,25 +2,14 @@ package invoice
 
 import (
 	"encoding/xml"
-
-	services "github.com/mathantunes/arex_project/services"
 )
-
-type Invoice struct {
-	Type            services.InvoiceType
-	CustomerID      uint16
-	InvoiceNumber   int
-	Currency        string
-	FaceValue       int
-	CounterPartyVAT string
-	IssueDate       string
-	DueDate         string
-}
 
 // invoiceXML definition for xml standards receiver
 type invoiceXML struct {
-	XMLName xml.Name       `xml:"Finvoice"`
-	Details invoiceDetails `xml:"InvoiceDetails"`
+	XMLName            xml.Name           `xml:"Finvoice"`
+	Details            invoiceDetails     `xml:"InvoiceDetails"`
+	SellerPartyDetails sellerPartyDetails `xml:"SellerPartyDetails"`
+	BuyerPartyDetails  buyerPartyDetails  `xml:"BuyerPartyDetails"`
 }
 
 // invoiceDetails represents the InvoiceDetails Node from standards
@@ -40,4 +29,14 @@ type vatIncluded struct {
 // paymentTermsDetails represents the PaymentTermsDetails Node from standards
 type paymentTermsDetails struct {
 	DueDate string `xml:"InvoiceDueDate"`
+}
+
+type buyerPartyDetails struct {
+	BuyerOrganisationName    string `xml:"BuyerOrganisationName"`
+	BuyerOrganisationTaxCode string `xml:"BuyerOrganisationTaxCode"`
+}
+
+type sellerPartyDetails struct {
+	SellerOrganisationName    string `xml:"SellerOrganisationName"`
+	SellerOrganisationTaxCode string `xml:"SellerOrganisationTaxCode"`
 }

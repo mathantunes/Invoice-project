@@ -24,6 +24,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+//Identifies the AP or AR Invoice Types
 type InvoiceType int32
 
 const (
@@ -75,6 +76,100 @@ func (EStatus) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_09d7a0907870ec2e, []int{1}
 }
 
+type QueryInvoice struct {
+	InvoiceNumber        uint64   `protobuf:"varint,1,opt,name=InvoiceNumber,proto3" json:"InvoiceNumber,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *QueryInvoice) Reset()         { *m = QueryInvoice{} }
+func (m *QueryInvoice) String() string { return proto.CompactTextString(m) }
+func (*QueryInvoice) ProtoMessage()    {}
+func (*QueryInvoice) Descriptor() ([]byte, []int) {
+	return fileDescriptor_09d7a0907870ec2e, []int{0}
+}
+
+func (m *QueryInvoice) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_QueryInvoice.Unmarshal(m, b)
+}
+func (m *QueryInvoice) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_QueryInvoice.Marshal(b, m, deterministic)
+}
+func (m *QueryInvoice) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryInvoice.Merge(m, src)
+}
+func (m *QueryInvoice) XXX_Size() int {
+	return xxx_messageInfo_QueryInvoice.Size(m)
+}
+func (m *QueryInvoice) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryInvoice.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryInvoice proto.InternalMessageInfo
+
+func (m *QueryInvoice) GetInvoiceNumber() uint64 {
+	if m != nil {
+		return m.InvoiceNumber
+	}
+	return 0
+}
+
+type AttachmentsResponse struct {
+	Data                 []byte   `protobuf:"bytes,1,opt,name=Data,proto3" json:"Data,omitempty"`
+	InvoiceNumber        uint64   `protobuf:"varint,2,opt,name=InvoiceNumber,proto3" json:"InvoiceNumber,omitempty"`
+	AttachmentNumber     uint64   `protobuf:"varint,3,opt,name=AttachmentNumber,proto3" json:"AttachmentNumber,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *AttachmentsResponse) Reset()         { *m = AttachmentsResponse{} }
+func (m *AttachmentsResponse) String() string { return proto.CompactTextString(m) }
+func (*AttachmentsResponse) ProtoMessage()    {}
+func (*AttachmentsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_09d7a0907870ec2e, []int{1}
+}
+
+func (m *AttachmentsResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AttachmentsResponse.Unmarshal(m, b)
+}
+func (m *AttachmentsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AttachmentsResponse.Marshal(b, m, deterministic)
+}
+func (m *AttachmentsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AttachmentsResponse.Merge(m, src)
+}
+func (m *AttachmentsResponse) XXX_Size() int {
+	return xxx_messageInfo_AttachmentsResponse.Size(m)
+}
+func (m *AttachmentsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_AttachmentsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AttachmentsResponse proto.InternalMessageInfo
+
+func (m *AttachmentsResponse) GetData() []byte {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+func (m *AttachmentsResponse) GetInvoiceNumber() uint64 {
+	if m != nil {
+		return m.InvoiceNumber
+	}
+	return 0
+}
+
+func (m *AttachmentsResponse) GetAttachmentNumber() uint64 {
+	if m != nil {
+		return m.AttachmentNumber
+	}
+	return 0
+}
+
 type Invoice struct {
 	//Data XML file data from Finvoice 1.3 Standard
 	Data []byte `protobuf:"bytes,1,opt,name=Data,proto3" json:"Data,omitempty"`
@@ -93,7 +188,7 @@ func (m *Invoice) Reset()         { *m = Invoice{} }
 func (m *Invoice) String() string { return proto.CompactTextString(m) }
 func (*Invoice) ProtoMessage()    {}
 func (*Invoice) Descriptor() ([]byte, []int) {
-	return fileDescriptor_09d7a0907870ec2e, []int{0}
+	return fileDescriptor_09d7a0907870ec2e, []int{2}
 }
 
 func (m *Invoice) XXX_Unmarshal(b []byte) error {
@@ -143,7 +238,10 @@ func (m *Invoice) GetType() InvoiceType {
 }
 
 type InvoicePreview struct {
+	Invoice_Number       int64    `protobuf:"varint,1,opt,name=Invoice_Number,json=InvoiceNumber,proto3" json:"Invoice_Number,omitempty"`
 	Preview              []byte   `protobuf:"bytes,2,opt,name=Preview,proto3" json:"Preview,omitempty"`
+	IssuerId             uint32   `protobuf:"varint,3,opt,name=Issuer_id,json=IssuerId,proto3" json:"Issuer_id,omitempty"`
+	Counterparty_Vat     string   `protobuf:"bytes,4,opt,name=Counterparty_Vat,json=CounterpartyVat,proto3" json:"Counterparty_Vat,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -153,7 +251,7 @@ func (m *InvoicePreview) Reset()         { *m = InvoicePreview{} }
 func (m *InvoicePreview) String() string { return proto.CompactTextString(m) }
 func (*InvoicePreview) ProtoMessage()    {}
 func (*InvoicePreview) Descriptor() ([]byte, []int) {
-	return fileDescriptor_09d7a0907870ec2e, []int{1}
+	return fileDescriptor_09d7a0907870ec2e, []int{3}
 }
 
 func (m *InvoicePreview) XXX_Unmarshal(b []byte) error {
@@ -174,6 +272,13 @@ func (m *InvoicePreview) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_InvoicePreview proto.InternalMessageInfo
 
+func (m *InvoicePreview) GetInvoice_Number() int64 {
+	if m != nil {
+		return m.Invoice_Number
+	}
+	return 0
+}
+
 func (m *InvoicePreview) GetPreview() []byte {
 	if m != nil {
 		return m.Preview
@@ -181,9 +286,26 @@ func (m *InvoicePreview) GetPreview() []byte {
 	return nil
 }
 
+func (m *InvoicePreview) GetIssuerId() uint32 {
+	if m != nil {
+		return m.IssuerId
+	}
+	return 0
+}
+
+func (m *InvoicePreview) GetCounterparty_Vat() string {
+	if m != nil {
+		return m.Counterparty_Vat
+	}
+	return ""
+}
+
 //Attachment pdf files to be sent through stream
 type Attachment struct {
-	Content              []byte   `protobuf:"bytes,1,opt,name=Content,proto3" json:"Content,omitempty"`
+	Invoice_Number       int64    `protobuf:"varint,1,opt,name=Invoice_Number,json=InvoiceNumber,proto3" json:"Invoice_Number,omitempty"`
+	Content              []byte   `protobuf:"bytes,2,opt,name=Content,proto3" json:"Content,omitempty"`
+	IssuerId             uint32   `protobuf:"varint,3,opt,name=Issuer_id,json=IssuerId,proto3" json:"Issuer_id,omitempty"`
+	Counterparty_Vat     string   `protobuf:"bytes,4,opt,name=Counterparty_Vat,json=CounterpartyVat,proto3" json:"Counterparty_Vat,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -193,7 +315,7 @@ func (m *Attachment) Reset()         { *m = Attachment{} }
 func (m *Attachment) String() string { return proto.CompactTextString(m) }
 func (*Attachment) ProtoMessage()    {}
 func (*Attachment) Descriptor() ([]byte, []int) {
-	return fileDescriptor_09d7a0907870ec2e, []int{2}
+	return fileDescriptor_09d7a0907870ec2e, []int{4}
 }
 
 func (m *Attachment) XXX_Unmarshal(b []byte) error {
@@ -214,11 +336,32 @@ func (m *Attachment) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Attachment proto.InternalMessageInfo
 
+func (m *Attachment) GetInvoice_Number() int64 {
+	if m != nil {
+		return m.Invoice_Number
+	}
+	return 0
+}
+
 func (m *Attachment) GetContent() []byte {
 	if m != nil {
 		return m.Content
 	}
 	return nil
+}
+
+func (m *Attachment) GetIssuerId() uint32 {
+	if m != nil {
+		return m.IssuerId
+	}
+	return 0
+}
+
+func (m *Attachment) GetCounterparty_Vat() string {
+	if m != nil {
+		return m.Counterparty_Vat
+	}
+	return ""
 }
 
 //Response for Invoice services
@@ -234,7 +377,7 @@ func (m *Response) Reset()         { *m = Response{} }
 func (m *Response) String() string { return proto.CompactTextString(m) }
 func (*Response) ProtoMessage()    {}
 func (*Response) Descriptor() ([]byte, []int) {
-	return fileDescriptor_09d7a0907870ec2e, []int{3}
+	return fileDescriptor_09d7a0907870ec2e, []int{5}
 }
 
 func (m *Response) XXX_Unmarshal(b []byte) error {
@@ -269,42 +412,174 @@ func (m *Response) GetDescription() string {
 	return ""
 }
 
+type InternalInvoice struct {
+	Type                 InvoiceType `protobuf:"varint,1,opt,name=Type,proto3,enum=services.InvoiceType" json:"Type,omitempty"`
+	CustomerID           uint32      `protobuf:"varint,2,opt,name=CustomerID,proto3" json:"CustomerID,omitempty"`
+	InvoiceNumber        int64       `protobuf:"varint,3,opt,name=InvoiceNumber,proto3" json:"InvoiceNumber,omitempty"`
+	Currency             string      `protobuf:"bytes,4,opt,name=Currency,proto3" json:"Currency,omitempty"`
+	FaceValue            int64       `protobuf:"varint,5,opt,name=FaceValue,proto3" json:"FaceValue,omitempty"`
+	CounterPartyVAT      string      `protobuf:"bytes,6,opt,name=CounterPartyVAT,proto3" json:"CounterPartyVAT,omitempty"`
+	CounterPartyCountry  string      `protobuf:"bytes,7,opt,name=CounterPartyCountry,proto3" json:"CounterPartyCountry,omitempty"`
+	IssueDate            string      `protobuf:"bytes,8,opt,name=IssueDate,proto3" json:"IssueDate,omitempty"`
+	DueDate              string      `protobuf:"bytes,9,opt,name=DueDate,proto3" json:"DueDate,omitempty"`
+	ValidVAT             bool        `protobuf:"varint,10,opt,name=ValidVAT,proto3" json:"ValidVAT,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
+}
+
+func (m *InternalInvoice) Reset()         { *m = InternalInvoice{} }
+func (m *InternalInvoice) String() string { return proto.CompactTextString(m) }
+func (*InternalInvoice) ProtoMessage()    {}
+func (*InternalInvoice) Descriptor() ([]byte, []int) {
+	return fileDescriptor_09d7a0907870ec2e, []int{6}
+}
+
+func (m *InternalInvoice) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_InternalInvoice.Unmarshal(m, b)
+}
+func (m *InternalInvoice) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_InternalInvoice.Marshal(b, m, deterministic)
+}
+func (m *InternalInvoice) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_InternalInvoice.Merge(m, src)
+}
+func (m *InternalInvoice) XXX_Size() int {
+	return xxx_messageInfo_InternalInvoice.Size(m)
+}
+func (m *InternalInvoice) XXX_DiscardUnknown() {
+	xxx_messageInfo_InternalInvoice.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_InternalInvoice proto.InternalMessageInfo
+
+func (m *InternalInvoice) GetType() InvoiceType {
+	if m != nil {
+		return m.Type
+	}
+	return InvoiceType_AP
+}
+
+func (m *InternalInvoice) GetCustomerID() uint32 {
+	if m != nil {
+		return m.CustomerID
+	}
+	return 0
+}
+
+func (m *InternalInvoice) GetInvoiceNumber() int64 {
+	if m != nil {
+		return m.InvoiceNumber
+	}
+	return 0
+}
+
+func (m *InternalInvoice) GetCurrency() string {
+	if m != nil {
+		return m.Currency
+	}
+	return ""
+}
+
+func (m *InternalInvoice) GetFaceValue() int64 {
+	if m != nil {
+		return m.FaceValue
+	}
+	return 0
+}
+
+func (m *InternalInvoice) GetCounterPartyVAT() string {
+	if m != nil {
+		return m.CounterPartyVAT
+	}
+	return ""
+}
+
+func (m *InternalInvoice) GetCounterPartyCountry() string {
+	if m != nil {
+		return m.CounterPartyCountry
+	}
+	return ""
+}
+
+func (m *InternalInvoice) GetIssueDate() string {
+	if m != nil {
+		return m.IssueDate
+	}
+	return ""
+}
+
+func (m *InternalInvoice) GetDueDate() string {
+	if m != nil {
+		return m.DueDate
+	}
+	return ""
+}
+
+func (m *InternalInvoice) GetValidVAT() bool {
+	if m != nil {
+		return m.ValidVAT
+	}
+	return false
+}
+
 func init() {
 	proto.RegisterEnum("services.InvoiceType", InvoiceType_name, InvoiceType_value)
 	proto.RegisterEnum("services.EStatus", EStatus_name, EStatus_value)
+	proto.RegisterType((*QueryInvoice)(nil), "services.QueryInvoice")
+	proto.RegisterType((*AttachmentsResponse)(nil), "services.AttachmentsResponse")
 	proto.RegisterType((*Invoice)(nil), "services.Invoice")
 	proto.RegisterType((*InvoicePreview)(nil), "services.InvoicePreview")
 	proto.RegisterType((*Attachment)(nil), "services.Attachment")
 	proto.RegisterType((*Response)(nil), "services.Response")
+	proto.RegisterType((*InternalInvoice)(nil), "services.InternalInvoice")
 }
 
 func init() { proto.RegisterFile("invoices.proto", fileDescriptor_09d7a0907870ec2e) }
 
 var fileDescriptor_09d7a0907870ec2e = []byte{
-	// 354 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x52, 0x4d, 0x4b, 0xeb, 0x50,
-	0x10, 0xed, 0x6d, 0xfb, 0xfa, 0x31, 0xed, 0xcb, 0x4b, 0x87, 0x3e, 0x08, 0xef, 0x29, 0x84, 0x2c,
-	0x24, 0xed, 0xa2, 0x8b, 0xba, 0x74, 0x63, 0x69, 0x05, 0x0b, 0x8a, 0xe5, 0x6a, 0xd1, 0x9d, 0xc4,
-	0x66, 0xc0, 0xa0, 0xe6, 0x86, 0x7b, 0x6f, 0x2b, 0xfe, 0x02, 0xff, 0xa3, 0xbf, 0x46, 0x92, 0xdc,
-	0x90, 0x60, 0x75, 0x95, 0x99, 0x73, 0x4e, 0xce, 0x99, 0x99, 0x04, 0xac, 0x28, 0xde, 0x89, 0x68,
-	0x43, 0x6a, 0x92, 0x48, 0xa1, 0x05, 0x76, 0x14, 0xc9, 0x5d, 0xda, 0x7b, 0xef, 0x0c, 0xda, 0xcb,
-	0x9c, 0x44, 0x84, 0xe6, 0x22, 0xd0, 0x81, 0xc3, 0x5c, 0xe6, 0xf7, 0x79, 0x56, 0xe3, 0x7f, 0xe8,
-	0x2e, 0x95, 0xda, 0x92, 0xbc, 0x8f, 0x42, 0xa7, 0xee, 0x32, 0xff, 0x37, 0xef, 0xe4, 0xc0, 0x32,
-	0x44, 0x17, 0x7a, 0x33, 0xad, 0x83, 0xcd, 0xe3, 0x0b, 0xc5, 0x5a, 0x39, 0x0d, 0xb7, 0xe1, 0xf7,
-	0x79, 0x15, 0xc2, 0x11, 0x34, 0x6f, 0xde, 0x12, 0x72, 0x9a, 0x2e, 0xf3, 0xad, 0xe9, 0xdf, 0x49,
-	0x91, 0x3b, 0x31, 0x99, 0x29, 0xc9, 0x33, 0x89, 0x37, 0x06, 0xcb, 0x80, 0x2b, 0x49, 0xbb, 0x88,
-	0x5e, 0xd1, 0x81, 0xb6, 0x29, 0xb3, 0xe4, 0x3e, 0x2f, 0x5a, 0xef, 0x08, 0xa0, 0x4c, 0x49, 0x75,
-	0x73, 0x11, 0x6b, 0x8a, 0xb5, 0x19, 0xbd, 0x68, 0xbd, 0x5b, 0xe8, 0x70, 0x52, 0x89, 0x88, 0x15,
-	0xe1, 0x08, 0x5a, 0xd7, 0x3a, 0xd0, 0x5b, 0x95, 0x89, 0xac, 0xe9, 0xa0, 0x1c, 0x86, 0x72, 0x82,
-	0x1b, 0x41, 0xba, 0xd7, 0x82, 0xd4, 0x46, 0x46, 0x89, 0x8e, 0x44, 0x9c, 0x85, 0x77, 0x79, 0x15,
-	0x1a, 0x1f, 0x42, 0xaf, 0xb2, 0x01, 0xb6, 0xa0, 0x3e, 0x5b, 0xd9, 0xb5, 0xec, 0xc9, 0x6d, 0x36,
-	0x3e, 0x80, 0xb6, 0xf1, 0xc4, 0x2e, 0xfc, 0x3a, 0x93, 0x52, 0xc8, 0x9c, 0xbd, 0x7a, 0xb2, 0xd9,
-	0xf4, 0x83, 0xc1, 0x1f, 0xf3, 0xf6, 0x3a, 0x79, 0x16, 0x41, 0x48, 0x12, 0x4f, 0xc0, 0x9e, 0x4b,
-	0x0a, 0x34, 0xdd, 0x5d, 0x5e, 0x14, 0xdf, 0x63, 0xb0, 0x77, 0xae, 0x7f, 0x58, 0x42, 0xc5, 0x62,
-	0x5e, 0x0d, 0xcf, 0x61, 0xb8, 0x4e, 0xc2, 0x40, 0xd3, 0xd7, 0x03, 0xee, 0x19, 0x18, 0xe6, 0x7b,
-	0x1f, 0x9f, 0xe1, 0x29, 0xd8, 0xb9, 0x53, 0xe5, 0xbc, 0xc3, 0x52, 0x5b, 0xa2, 0x3f, 0x39, 0x3c,
-	0xb4, 0xb2, 0x3f, 0xec, 0xf8, 0x33, 0x00, 0x00, 0xff, 0xff, 0x00, 0xa1, 0x4d, 0xf9, 0x73, 0x02,
-	0x00, 0x00,
+	// 641 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x55, 0xcd, 0x6e, 0xd3, 0x40,
+	0x10, 0xee, 0xd6, 0x69, 0x62, 0x4f, 0xd3, 0xd4, 0xdd, 0x16, 0x64, 0x95, 0x16, 0x45, 0x16, 0x48,
+	0x6e, 0x0f, 0x55, 0x15, 0xb8, 0x71, 0xa1, 0x4a, 0xa0, 0x98, 0xdf, 0xb2, 0xb4, 0x81, 0x5b, 0xb5,
+	0x4d, 0x46, 0xc2, 0x22, 0xb5, 0xad, 0xf5, 0xba, 0x28, 0xe2, 0x01, 0x78, 0x02, 0x0e, 0xbc, 0x1a,
+	0xcf, 0xc0, 0x8d, 0x17, 0x40, 0xde, 0xac, 0x63, 0x27, 0x71, 0x84, 0x10, 0x9c, 0xb2, 0xf3, 0xcd,
+	0xcc, 0x37, 0xdf, 0xce, 0x8c, 0x37, 0xd0, 0x0a, 0xc2, 0x9b, 0x28, 0x18, 0x60, 0x72, 0x14, 0x8b,
+	0x48, 0x46, 0xd4, 0x4c, 0x50, 0xdc, 0x64, 0xb6, 0xfb, 0x10, 0x9a, 0x6f, 0x53, 0x14, 0x63, 0x7f,
+	0x12, 0x40, 0xef, 0xc1, 0x86, 0x3e, 0xbe, 0x4e, 0xaf, 0xaf, 0x50, 0x38, 0xa4, 0x4d, 0xbc, 0x1a,
+	0x9b, 0x05, 0xdd, 0x2f, 0xb0, 0x7d, 0x22, 0x25, 0x1f, 0x7c, 0xbc, 0xc6, 0x50, 0x26, 0x0c, 0x93,
+	0x38, 0x0a, 0x13, 0xa4, 0x14, 0x6a, 0x3d, 0x2e, 0xb9, 0xca, 0x69, 0x32, 0x75, 0x5e, 0x24, 0x5c,
+	0xad, 0x20, 0xa4, 0x87, 0x60, 0x17, 0x84, 0x3a, 0xd0, 0x50, 0x81, 0x0b, 0xb8, 0xfb, 0x95, 0x40,
+	0x23, 0x97, 0x5b, 0x55, 0xf1, 0x0e, 0x58, 0x7e, 0x92, 0xa4, 0x28, 0x2e, 0x83, 0xa1, 0xaa, 0xb6,
+	0xc1, 0xcc, 0x09, 0xe0, 0x0f, 0x69, 0x1b, 0xd6, 0x4b, 0xca, 0x1d, 0xa3, 0x6d, 0x78, 0x4d, 0x56,
+	0x86, 0xe8, 0x01, 0xd4, 0xce, 0xc7, 0x31, 0x3a, 0xb5, 0x36, 0xf1, 0x5a, 0x9d, 0x5b, 0x47, 0x79,
+	0xab, 0x8e, 0x74, 0xcd, 0xcc, 0xc9, 0x54, 0x88, 0xfb, 0x9d, 0x40, 0x4b, 0xa3, 0x67, 0x02, 0x6f,
+	0x02, 0xfc, 0x4c, 0xef, 0x4f, 0x91, 0xcb, 0x52, 0x03, 0x8d, 0xf9, 0xfb, 0x3a, 0xd0, 0xd0, 0x19,
+	0x4a, 0x61, 0x93, 0xe5, 0xe6, 0xac, 0x7a, 0x63, 0x4e, 0xfd, 0x01, 0xd8, 0xdd, 0x28, 0x0d, 0x25,
+	0x8a, 0x98, 0x0b, 0x39, 0xbe, 0xec, 0x73, 0xa9, 0x74, 0x5a, 0x6c, 0xb3, 0x8c, 0xf7, 0xb9, 0x74,
+	0xbf, 0x11, 0x80, 0xe2, 0x5a, 0x7f, 0xa1, 0xab, 0x1b, 0x85, 0x12, 0x43, 0x99, 0xeb, 0xd2, 0xe6,
+	0x7f, 0xd3, 0xf5, 0x1e, 0xcc, 0xe9, 0xbe, 0x1c, 0x40, 0xfd, 0x9d, 0xe4, 0x32, 0x4d, 0x94, 0x98,
+	0x56, 0x67, 0xab, 0x68, 0x36, 0x4e, 0x1c, 0x4c, 0x07, 0x64, 0x73, 0xeb, 0x61, 0x32, 0x10, 0x41,
+	0x2c, 0x83, 0x28, 0x54, 0xe2, 0x2c, 0x56, 0x86, 0xdc, 0x9f, 0xab, 0xb0, 0xe9, 0x67, 0xa5, 0x42,
+	0x3e, 0xca, 0xd7, 0x23, 0x9f, 0x25, 0xf9, 0xe3, 0x2c, 0xe9, 0x5d, 0x80, 0x6e, 0x9a, 0xc8, 0xe8,
+	0x1a, 0x85, 0xdf, 0xd3, 0x6b, 0x53, 0x42, 0x16, 0xf7, 0xd8, 0xa8, 0xea, 0xdf, 0x2e, 0x98, 0xdd,
+	0x54, 0x08, 0x0c, 0x07, 0x63, 0xdd, 0x80, 0xa9, 0x4d, 0xf7, 0xc0, 0x7a, 0xca, 0x07, 0xd8, 0xe7,
+	0xa3, 0x14, 0x9d, 0x35, 0x95, 0x5d, 0x00, 0xd4, 0x83, 0xbc, 0x55, 0x67, 0xaa, 0x55, 0x27, 0xe7,
+	0x4e, 0x7d, 0xa6, 0x83, 0x39, 0x4c, 0x8f, 0x61, 0xbb, 0x0c, 0xa9, 0xb3, 0x18, 0x3b, 0x0d, 0x15,
+	0x5d, 0xe5, 0xca, 0x2a, 0xab, 0x51, 0xf5, 0xb8, 0x44, 0xc7, 0x54, 0x71, 0x05, 0x90, 0xcd, 0xbc,
+	0xa7, 0x7d, 0x96, 0xf2, 0xe5, 0x66, 0x76, 0x9b, 0x3e, 0x1f, 0x05, 0xc3, 0x4c, 0x0c, 0xb4, 0x89,
+	0x67, 0xb2, 0xa9, 0x7d, 0xb8, 0x0f, 0xeb, 0xa5, 0x26, 0xd2, 0x3a, 0xac, 0x9e, 0x9c, 0xd9, 0x2b,
+	0xea, 0x97, 0xd9, 0xe4, 0x70, 0x0f, 0x1a, 0x7a, 0x84, 0xd4, 0x82, 0xb5, 0x27, 0x42, 0x44, 0x62,
+	0xe2, 0x7d, 0xf3, 0xc9, 0x26, 0x9d, 0x1f, 0x24, 0x9b, 0x95, 0xca, 0xbe, 0x88, 0x47, 0x11, 0x1f,
+	0xa2, 0xa0, 0x8f, 0xc0, 0xee, 0x0a, 0xe4, 0x12, 0x3f, 0xbc, 0x7a, 0x99, 0xcf, 0x6f, 0x6b, 0x61,
+	0x62, 0xbb, 0xb4, 0x80, 0xf2, 0x3d, 0x72, 0x57, 0xe8, 0x33, 0xd8, 0xb9, 0x88, 0x87, 0x5c, 0xe2,
+	0xdc, 0xe7, 0xe8, 0x2c, 0x10, 0x68, 0x4f, 0x35, 0x8f, 0x47, 0xe8, 0x63, 0xb0, 0x27, 0x4c, 0xa5,
+	0x8f, 0x67, 0xa7, 0x88, 0x2d, 0xd0, 0x65, 0x0c, 0x9d, 0x5f, 0x64, 0xba, 0x2a, 0xa7, 0x28, 0x25,
+	0x0a, 0xea, 0xc3, 0xd6, 0x29, 0xca, 0x39, 0x69, 0xb7, 0x8b, 0xf4, 0xf2, 0x0b, 0xbc, 0xbb, 0x54,
+	0xb2, 0xbb, 0x72, 0x4c, 0xe8, 0x0b, 0x68, 0x9d, 0xa2, 0x2c, 0xbf, 0x57, 0xcb, 0x78, 0xf6, 0xab,
+	0x44, 0x27, 0x85, 0xd2, 0x63, 0x42, 0x9f, 0xc3, 0xc6, 0x0c, 0xd9, 0x3f, 0x70, 0x5d, 0xd5, 0xd5,
+	0x3f, 0xcb, 0x83, 0xdf, 0x01, 0x00, 0x00, 0xff, 0xff, 0xda, 0x04, 0xaa, 0x7b, 0x6b, 0x06, 0x00,
+	0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -529,6 +804,231 @@ var _InvoiceUploader_serviceDesc = grpc.ServiceDesc{
 			StreamName:    "UpdateAttachment",
 			Handler:       _InvoiceUploader_UpdateAttachment_Handler,
 			ClientStreams: true,
+		},
+	},
+	Metadata: "invoices.proto",
+}
+
+// InvoiceGetterClient is the client API for InvoiceGetter service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type InvoiceGetterClient interface {
+	GetInvoicePreview(ctx context.Context, in *QueryInvoice, opts ...grpc.CallOption) (InvoiceGetter_GetInvoicePreviewClient, error)
+	GetAttachments(ctx context.Context, in *QueryInvoice, opts ...grpc.CallOption) (InvoiceGetter_GetAttachmentsClient, error)
+	GetAttachment(ctx context.Context, in *QueryInvoice, opts ...grpc.CallOption) (InvoiceGetter_GetAttachmentClient, error)
+}
+
+type invoiceGetterClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewInvoiceGetterClient(cc *grpc.ClientConn) InvoiceGetterClient {
+	return &invoiceGetterClient{cc}
+}
+
+func (c *invoiceGetterClient) GetInvoicePreview(ctx context.Context, in *QueryInvoice, opts ...grpc.CallOption) (InvoiceGetter_GetInvoicePreviewClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_InvoiceGetter_serviceDesc.Streams[0], "/services.InvoiceGetter/GetInvoicePreview", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &invoiceGetterGetInvoicePreviewClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type InvoiceGetter_GetInvoicePreviewClient interface {
+	Recv() (*InvoicePreview, error)
+	grpc.ClientStream
+}
+
+type invoiceGetterGetInvoicePreviewClient struct {
+	grpc.ClientStream
+}
+
+func (x *invoiceGetterGetInvoicePreviewClient) Recv() (*InvoicePreview, error) {
+	m := new(InvoicePreview)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *invoiceGetterClient) GetAttachments(ctx context.Context, in *QueryInvoice, opts ...grpc.CallOption) (InvoiceGetter_GetAttachmentsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_InvoiceGetter_serviceDesc.Streams[1], "/services.InvoiceGetter/GetAttachments", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &invoiceGetterGetAttachmentsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type InvoiceGetter_GetAttachmentsClient interface {
+	Recv() (*AttachmentsResponse, error)
+	grpc.ClientStream
+}
+
+type invoiceGetterGetAttachmentsClient struct {
+	grpc.ClientStream
+}
+
+func (x *invoiceGetterGetAttachmentsClient) Recv() (*AttachmentsResponse, error) {
+	m := new(AttachmentsResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *invoiceGetterClient) GetAttachment(ctx context.Context, in *QueryInvoice, opts ...grpc.CallOption) (InvoiceGetter_GetAttachmentClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_InvoiceGetter_serviceDesc.Streams[2], "/services.InvoiceGetter/GetAttachment", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &invoiceGetterGetAttachmentClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type InvoiceGetter_GetAttachmentClient interface {
+	Recv() (*AttachmentsResponse, error)
+	grpc.ClientStream
+}
+
+type invoiceGetterGetAttachmentClient struct {
+	grpc.ClientStream
+}
+
+func (x *invoiceGetterGetAttachmentClient) Recv() (*AttachmentsResponse, error) {
+	m := new(AttachmentsResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+// InvoiceGetterServer is the server API for InvoiceGetter service.
+type InvoiceGetterServer interface {
+	GetInvoicePreview(*QueryInvoice, InvoiceGetter_GetInvoicePreviewServer) error
+	GetAttachments(*QueryInvoice, InvoiceGetter_GetAttachmentsServer) error
+	GetAttachment(*QueryInvoice, InvoiceGetter_GetAttachmentServer) error
+}
+
+// UnimplementedInvoiceGetterServer can be embedded to have forward compatible implementations.
+type UnimplementedInvoiceGetterServer struct {
+}
+
+func (*UnimplementedInvoiceGetterServer) GetInvoicePreview(req *QueryInvoice, srv InvoiceGetter_GetInvoicePreviewServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetInvoicePreview not implemented")
+}
+func (*UnimplementedInvoiceGetterServer) GetAttachments(req *QueryInvoice, srv InvoiceGetter_GetAttachmentsServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAttachments not implemented")
+}
+func (*UnimplementedInvoiceGetterServer) GetAttachment(req *QueryInvoice, srv InvoiceGetter_GetAttachmentServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAttachment not implemented")
+}
+
+func RegisterInvoiceGetterServer(s *grpc.Server, srv InvoiceGetterServer) {
+	s.RegisterService(&_InvoiceGetter_serviceDesc, srv)
+}
+
+func _InvoiceGetter_GetInvoicePreview_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(QueryInvoice)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(InvoiceGetterServer).GetInvoicePreview(m, &invoiceGetterGetInvoicePreviewServer{stream})
+}
+
+type InvoiceGetter_GetInvoicePreviewServer interface {
+	Send(*InvoicePreview) error
+	grpc.ServerStream
+}
+
+type invoiceGetterGetInvoicePreviewServer struct {
+	grpc.ServerStream
+}
+
+func (x *invoiceGetterGetInvoicePreviewServer) Send(m *InvoicePreview) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _InvoiceGetter_GetAttachments_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(QueryInvoice)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(InvoiceGetterServer).GetAttachments(m, &invoiceGetterGetAttachmentsServer{stream})
+}
+
+type InvoiceGetter_GetAttachmentsServer interface {
+	Send(*AttachmentsResponse) error
+	grpc.ServerStream
+}
+
+type invoiceGetterGetAttachmentsServer struct {
+	grpc.ServerStream
+}
+
+func (x *invoiceGetterGetAttachmentsServer) Send(m *AttachmentsResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _InvoiceGetter_GetAttachment_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(QueryInvoice)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(InvoiceGetterServer).GetAttachment(m, &invoiceGetterGetAttachmentServer{stream})
+}
+
+type InvoiceGetter_GetAttachmentServer interface {
+	Send(*AttachmentsResponse) error
+	grpc.ServerStream
+}
+
+type invoiceGetterGetAttachmentServer struct {
+	grpc.ServerStream
+}
+
+func (x *invoiceGetterGetAttachmentServer) Send(m *AttachmentsResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+var _InvoiceGetter_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "services.InvoiceGetter",
+	HandlerType: (*InvoiceGetterServer)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetInvoicePreview",
+			Handler:       _InvoiceGetter_GetInvoicePreview_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAttachments",
+			Handler:       _InvoiceGetter_GetAttachments_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAttachment",
+			Handler:       _InvoiceGetter_GetAttachment_Handler,
+			ServerStreams: true,
 		},
 	},
 	Metadata: "invoices.proto",

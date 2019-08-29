@@ -16,11 +16,21 @@ service InvoiceUploader {
 }
 
 service InvoiceGetter {
-    rpc GetInvoicePreview(int) returns (stream InvoicePreview) {}
+    rpc GetInvoicePreview(QueryInvoice) returns (stream InvoicePreview) {}
 
-    rpc ListAttachments(int) returns () {}
+    rpc GetAttachments(QueryInvoice) returns (stream AttachmentsResponse) {}
 
-    rpc GetAttachment(int) returns () {}
+    rpc GetAttachment(QueryInvoice) returns (stream AttachmentsResponse) {}
+}
+
+message QueryInvoice {
+    uint64 InvoiceNumber = 1;
+}
+
+message AttachmentsResponse {
+    bytes Data = 1;
+    uint64 InvoiceNumber = 2;
+    uint64 AttachmentNumber = 3;
 }
 
 //Identifies the AP or AR Invoice Types
@@ -42,12 +52,18 @@ message Invoice {
 
 
 message InvoicePreview {
+    int64 Invoice_Number = 1;
     bytes Preview = 2;
+    uint32 Issuer_id = 3;
+    string Counterparty_Vat = 4;
 }
 
 //Attachment pdf files to be sent through stream
 message Attachment {
-    bytes Content = 1;
+    int64 Invoice_Number = 1;
+    bytes Content = 2;
+    uint32 Issuer_id = 3;
+    string Counterparty_Vat = 4;
 }
 
 
@@ -60,6 +76,19 @@ enum eStatus {
 message Response {
     eStatus Status = 1;
     string Description = 2;
+}
+
+message InternalInvoice {
+    InvoiceType Type = 1;
+    uint32 CustomerID = 2;
+    int64 InvoiceNumber = 3;    
+    string Currency = 4;
+    int64 FaceValue =5;
+    string CounterPartyVAT = 6;
+	string CounterPartyCountry = 7;
+    string IssueDate = 8;
+    string DueDate = 9;
+    bool ValidVAT = 10;
 }
 
 

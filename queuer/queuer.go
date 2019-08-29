@@ -1,7 +1,6 @@
 package queuer
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -20,10 +19,16 @@ const (
 	queueNameTest   = "QueueURL"
 )
 
-// Queuer Holds the Queue Connection
-type Queuer struct {
-	svc *sqs.SQS
+// QueueManager Abstraction for Full Queue operation
+type QueueManager interface {
+	GetQueueURL(queueName string) (string, error)
+	WriteToQueue(queueURL string, body []byte) error
+	ReadFromQueue(queueURL string) (string, error)
+	CreateQueue(name string) error
 }
+
+// Queuer Holds the Queue Connection
+type Queuer struct{}
 
 // New Initializes a Queuer
 func New() *Queuer {
@@ -31,7 +36,7 @@ func New() *Queuer {
 }
 
 // Init the Queuer Structure to communicate with AWS SQS
-func (q *Queuer) Init() error {
+func (q *Queuer) Init() *sqs.SQS {
 	//For simplicity, the Initialization will be done from hardcoded configuration
 	sess := session.Must(session.NewSession(&aws.Config{
 		Region:      aws.String(region),
@@ -42,23 +47,19 @@ func (q *Queuer) Init() error {
 	)
 
 	if sess == nil {
-		return errors.New("Session not initialized properly")
+		return nil
 	}
 
 	// Create a SQS service client.
-	q.svc = sqs.New(sess)
-
-	if q.svc == nil {
-		return errors.New("SQS not initialized properly")
-	}
-
-	return nil
+	return sqs.New(sess)
 }
 
 // CreateQueue Creates a new Queue
 func (q *Queuer) CreateQueue(name string) error {
+
+	svc := q.Init()
 	//For simplicity purposed, the Creation parameters will be done from hardcoded configuration
-	_, err := q.svc.CreateQueue(&sqs.CreateQueueInput{
+	_, err := svc.CreateQueue(&sqs.CreateQueueInput{
 		QueueName: aws.String(name),
 		Attributes: map[string]*string{
 			"DelaySeconds":           aws.String("60"),
@@ -70,7 +71,8 @@ func (q *Queuer) CreateQueue(name string) error {
 
 // GetQueueURL from QueueName
 func (q *Queuer) GetQueueURL(queueName string) (string, error) {
-	result, err := q.svc.GetQueueUrl(&sqs.GetQueueUrlInput{
+	svc := q.Init()
+	result, err := svc.GetQueueUrl(&sqs.GetQueueUrlInput{
 		QueueName: aws.String(queueName),
 	})
 
@@ -83,7 +85,8 @@ func (q *Queuer) GetQueueURL(queueName string) (string, error) {
 
 // WriteToQueue Writes a payload to a Queue
 func (q *Queuer) WriteToQueue(queueURL string, body []byte) error {
-	_, err := q.svc.SendMessage(&sqs.SendMessageInput{
+	svc := q.Init()
+	_, err := svc.SendMessage(&sqs.SendMessageInput{
 		DelaySeconds: aws.Int64(10),
 		// MessageAttributes: map[string]*sqs.MessageAttributeValue{
 		// 	"Title": &sqs.MessageAttributeValue{
@@ -99,7 +102,8 @@ func (q *Queuer) WriteToQueue(queueURL string, body []byte) error {
 
 // ReadFromQueue Reads a single value from queueUrl and deletes the message from Queue
 func (q *Queuer) ReadFromQueue(queueURL string) (string, error) {
-	result, err := q.svc.ReceiveMessage(&sqs.ReceiveMessageInput{
+	svc := q.Init()
+	result, err := svc.ReceiveMessage(&sqs.ReceiveMessageInput{
 		AttributeNames: []*string{
 			aws.String(sqs.MessageSystemAttributeNameSentTimestamp),
 		},
@@ -120,7 +124,7 @@ func (q *Queuer) ReadFromQueue(queueURL string) (string, error) {
 		return "", fmt.Errorf("Received no messages from Queue %v", queueURL)
 	}
 
-	_, err = q.svc.DeleteMessage(&sqs.DeleteMessageInput{
+	_, err = svc.DeleteMessage(&sqs.DeleteMessageInput{
 		QueueUrl:      aws.String(queueURL),
 		ReceiptHandle: result.Messages[0].ReceiptHandle,
 	})

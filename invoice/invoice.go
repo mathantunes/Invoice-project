@@ -73,11 +73,12 @@ func (sv *UploaderServer) CreateXMLInvoice(ctx context.Context, req *services.In
 	}()
 
 	//Start Validation
-	validation, err := sv.Validate(invoice.CounterPartyCountry, invoice.CounterPartyVAT)
+	validationResponse, err := sv.Validate(invoice.CounterPartyCountry, invoice.CounterPartyVAT)
 	if err != nil {
 		return nil, err
 	}
-	invoice.ValidVAT = validation
+	invoice.ValidVAT = validationResponse.Valid
+	invoice.CompanyName = validationResponse.CompanyName
 	//Start Creating Invoice Update on Queue
 	go func() {
 		err = queueInvoice(&wg, UpdateInvoiceQueue)
@@ -101,4 +102,8 @@ func (sv *UploaderServer) UpdateInvoicePreview(srv services.InvoiceUploader_Upda
 func (sv *UploaderServer) UpdateAttachment(srv services.InvoiceUploader_UpdateAttachmentServer) error {
 	return nil
 
+}
+
+func (sv *UploaderServer)UpdateCounterPartyVAT(context.Context, *services.CounterPartyVAT) (*services.Response, error){
+	return nil, nil
 }

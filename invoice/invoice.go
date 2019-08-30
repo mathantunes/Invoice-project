@@ -2,6 +2,7 @@ package invoice
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"sync"
 
@@ -46,7 +47,7 @@ func (sv *UploaderServer) CreateXMLInvoice(ctx context.Context, req *services.In
 	// }
 
 	// Helper function to queue invoice concurrently
-	queueInvoice := func(wg *sync.WaitGroup, queueName string) error {
+	queueInvoice := func(wg *sync.WaitGroup, queueName string, inv services.InternalInvoice) error {
 		//Get Queue URL for Creating Invoice
 		url, err := sv.GetQueueURL(queueName)
 		if err != nil {
@@ -54,8 +55,9 @@ func (sv *UploaderServer) CreateXMLInvoice(ctx context.Context, req *services.In
 		}
 
 		//Marshal Payload as Protobuf serialization
-		payload, err := proto.Marshal(invoice)
-		err = sv.WriteToQueue(url, payload)
+		payload, err := proto.Marshal(&inv)
+		encoded := base64.StdEncoding.EncodeToString(payload)
+		err = sv.WriteToQueue(url, []byte(encoded))
 		if err != nil {
 			return err
 		}
@@ -65,7 +67,7 @@ func (sv *UploaderServer) CreateXMLInvoice(ctx context.Context, req *services.In
 
 	//Start Creating Invoice on Queue
 	go func() {
-		err = queueInvoice(&wg, CreateInvoiceQueue)
+		err = queueInvoice(&wg, CreateInvoiceQueue, *invoice)
 		if err != nil {
 			//Allow for retry
 			fmt.Println(err)
@@ -81,7 +83,7 @@ func (sv *UploaderServer) CreateXMLInvoice(ctx context.Context, req *services.In
 	invoice.CompanyName = validationResponse.CompanyName
 	//Start Creating Invoice Update on Queue
 	go func() {
-		err = queueInvoice(&wg, UpdateInvoiceQueue)
+		err = queueInvoice(&wg, UpdateInvoiceQueue, *invoice)
 		if err != nil {
 			//Allow for retry
 			fmt.Println(err)
@@ -104,6 +106,6 @@ func (sv *UploaderServer) UpdateAttachment(srv services.InvoiceUploader_UpdateAt
 
 }
 
-func (sv *UploaderServer)UpdateCounterPartyVAT(context.Context, *services.CounterPartyVAT) (*services.Response, error){
+func (sv *UploaderServer) UpdateCounterPartyVAT(context.Context, *services.CounterPartyVAT) (*services.Response, error) {
 	return nil, nil
 }

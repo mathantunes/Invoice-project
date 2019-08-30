@@ -7,7 +7,9 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/mathantunes/arex_project/queuer"
 	services "github.com/mathantunes/arex_project/services"
+	"github.com/mathantunes/arex_project/validator"
 )
 
 func TestUploaderServer_CreateXMLInvoice(t *testing.T) {
@@ -41,8 +43,20 @@ func TestUploaderServer_CreateXMLInvoice(t *testing.T) {
 			sv:   &UploaderServer{&ValidationMock{}, &QueueMock{}},
 			args: args{ctx: context.Background(),
 				req: &services.Invoice{
-					IssuerId: 123,
-					Type:     services.InvoiceType_AR,
+					IssuerId: "A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A10",
+					Type:     services.InvoiceType_AP,
+				},
+				filePath: "./testdata/invoice.xml"},
+			want:    nil,
+			wantErr: false,
+		},
+		{
+			name: "Successful Call to real",
+			sv:   &UploaderServer{&ValidationMock{}, queuer.New()},
+			args: args{ctx: context.Background(),
+				req: &services.Invoice{
+					IssuerId: "A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A21",
+					Type:     services.InvoiceType_AP,
 				},
 				filePath: "./testdata/invoice.xml"},
 			want:    nil,
@@ -67,8 +81,8 @@ func TestUploaderServer_CreateXMLInvoice(t *testing.T) {
 
 type ValidationMock struct{}
 
-func (v *ValidationMock) Validate(countryCode, vatNumber string) (bool, error) {
-	return true, nil
+func (v *ValidationMock) Validate(countryCode, vatNumber string) (validator.InternalResponse, error) {
+	return validator.InternalResponse{}, nil
 }
 
 type QueueMock struct{}

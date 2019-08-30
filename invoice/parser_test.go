@@ -31,16 +31,17 @@ func Test_parseInvoiceInfo(t *testing.T) {
 		args    args
 		want    *services.InternalInvoice
 		wantErr bool
+		ignoreFile bool
 	}{
 		{
 			name: "Successful Parse",
 			args: args{&services.Invoice{
-				IssuerId: 123,
+				IssuerId: "123",
 				Type:     services.InvoiceType_AR,
 			}, "./testdata/invoice.xml"},
 			want: &services.InternalInvoice{
 				Type:                services.InvoiceType_AR,
-				CustomerID:          123,
+				CustomerID:          "123",
 				InvoiceNumber:       10000,
 				Currency:            "EUR",
 				FaceValue:           110261,
@@ -50,6 +51,7 @@ func Test_parseInvoiceInfo(t *testing.T) {
 				DueDate:             "20190823",
 			},
 			wantErr: false,
+			ignoreFile: true,
 		},
 	}
 	for _, tt := range tests {
@@ -60,6 +62,10 @@ func Test_parseInvoiceInfo(t *testing.T) {
 			if (err != nil) != tt.wantErr {
 				t.Errorf("parseInvoiceInfo() error = %v, wantErr %v", err, tt.wantErr)
 				return
+			}
+			if tt.ignoreFile {
+				got.InvoiceFile = nil
+				tt.want.InvoiceFile = nil
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("parseInvoiceInfo() = %v, want %v", got, tt.want)

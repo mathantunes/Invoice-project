@@ -33,6 +33,7 @@ func parseInvoiceInfo(inv *services.Invoice) (*services.InternalInvoice, error) 
 		Currency:      invoiceXML.Details.TotalVAT.Currency,
 		IssueDate:     invoiceXML.Details.IssueDate,
 		DueDate:       invoiceXML.Details.PaymentDetails.DueDate,
+		InvoiceFile:   invoiceData,
 	}
 	//Refactor Invoice value: Remove comma from number and multiply by 100 to have integer number
 	intFaceValue, err := strconv.Atoi(strings.Replace(invoiceXML.Details.FaceValue, ",", "", -1))

@@ -51,7 +51,7 @@ message Invoice {
     //Data XML file data from Finvoice 1.3 Standard
     bytes Data = 1;
     //Issuer_id Specification UUID type (This identifier is a 128-bit)
-    uint32 Issuer_id = 2;
+    string Issuer_id = 2;
     //Attachments are optional pdf files
     repeated bytes Attachments = 3;
     //Type defines the Invoice Type
@@ -62,7 +62,7 @@ message Invoice {
 message InvoicePreview {
     int64 Invoice_Number = 1;
     bytes Preview = 2;
-    uint32 Issuer_id = 3;
+    string Issuer_id = 3;
     string Counterparty_Vat = 4;
 }
 
@@ -70,7 +70,7 @@ message InvoicePreview {
 message Attachment {
     int64 Invoice_Number = 1;
     bytes Content = 2;
-    uint32 Issuer_id = 3;
+    string Issuer_id = 3;
     string Counterparty_Vat = 4;
 }
 
@@ -89,7 +89,7 @@ message Response {
 //InternalInvoice is the simplified Invoice for internal usage
 message InternalInvoice {
     InvoiceType Type = 1;
-    uint32 CustomerID = 2;
+    string CustomerID = 2;
     int64 InvoiceNumber = 3;    
     string Currency = 4;
     int64 FaceValue =5;

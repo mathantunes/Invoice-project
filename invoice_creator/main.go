@@ -7,6 +7,7 @@ import (
 	"net"
 
 	"github.com/mathantunes/arex_project/invoice"
+	"github.com/mathantunes/arex_project/queuer"
 	"github.com/mathantunes/arex_project/services"
 	"github.com/mathantunes/arex_project/validator"
 	"google.golang.org/grpc"
@@ -31,6 +32,7 @@ func runServer(addr string) {
 
 	services.RegisterInvoiceUploaderServer(grpcServer, &invoice.UploaderServer{
 		&validator.VIESValidator{},
+		queuer.New(),
 	})
 	// pb.RegisterRouteGuideServer(grpcServer, &routeGuideServer{})
 	grpcServer.Serve(lis)

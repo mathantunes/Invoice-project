@@ -27,7 +27,7 @@ message CounterPartyVAT {
 service InvoiceGetter {
     rpc GetInvoicePreview(QueryInvoice) returns (stream InvoicePreview) {}
 
-    rpc GetAttachments(QueryInvoice) returns (stream AttachmentsResponse) {}
+    rpc GetAttachments(QueryInvoice) returns (AttachmentsResponse) {}
 
     rpc GetAttachment(QueryAttachment) returns (stream AttachmentsResponse) {}
 }
@@ -43,7 +43,8 @@ message QueryInvoice {
 message AttachmentsResponse {
     bytes Data = 1;
     int64 InvoiceNumber = 2;
-    string Filename = 3;
+    repeated string Filenames = 3;
+    string Filename = 4;
 }
 
 //Identifies the AP or AR Invoice Types

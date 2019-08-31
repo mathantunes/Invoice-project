@@ -114,8 +114,7 @@ func updateAP(tx *sql.Tx, inv *services.InternalInvoice) error {
 	var status string
 	var vat string
 	err := tx.QueryRow(`SELECT status, counterparty_vat FROM "ap_invoices" 
-		WHERE counterparty_vat = $1 
-		AND invoice_number = $2`, inv.GetCounterPartyVAT(), inv.GetInvoiceNumber()).Scan(&status, &vat)
+		WHERE invoice_number = $1`, inv.GetInvoiceNumber()).Scan(&status, &vat)
 
 	if err != nil {
 		return err
@@ -132,10 +131,11 @@ func updateAP(tx *sql.Tx, inv *services.InternalInvoice) error {
 		currentStatus = invalidStatus
 	}
 	_, err = tx.Exec(`UPDATE ap_invoices SET status = $1, counterparty_vat = $2, company_name = $3
-		WHERE counterparty_vat = $4 AND invoice_number = $5`,
-		currentStatus, inv.GetCounterPartyVAT(),
+		WHERE invoice_number = $4`,
+		currentStatus,
+		inv.GetCounterPartyVAT(),
 		inv.GetCompanyName(),
-		vat, inv.GetInvoiceNumber())
+		inv.GetInvoiceNumber())
 	return err
 }
 
@@ -144,8 +144,8 @@ func updateAR(tx *sql.Tx, inv *services.InternalInvoice) error {
 	var status string
 	var vat string
 	row := tx.QueryRow(`SELECT status, counterparty_vat FROM ar_invoices 
-		WHERE customer_id=$1 AND invoice_number=$2`,
-		inv.GetCustomerID(), inv.GetInvoiceNumber())
+		WHERE invoice_number=$1`,
+		inv.GetInvoiceNumber())
 	err := row.Scan(&status, &vat)
 	if err != nil {
 		return err
@@ -162,9 +162,10 @@ func updateAR(tx *sql.Tx, inv *services.InternalInvoice) error {
 		currentStatus = invalidStatus
 	}
 	_, err = tx.Exec(`UPDATE ar_invoices SET status = $1, counterparty_vat = $2, company_name = $3
-		WHERE customer_id = $4 AND invoice_number = $5`,
-		currentStatus, inv.GetCounterPartyVAT(),
+		WHERE invoice_number = $4`,
+		currentStatus,
+		inv.GetCounterPartyVAT(),
 		inv.GetCompanyName(),
-		inv.GetCustomerID(), inv.GetInvoiceNumber())
+		inv.GetInvoiceNumber())
 	return err
 }

@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"log"
 
+	// "net"
+
 	"github.com/golang/protobuf/proto"
 	"github.com/mathantunes/arex_project/queuer"
 	"github.com/mathantunes/arex_project/services"
+	// "google.golang.org/grpc"
 )
 
 const (

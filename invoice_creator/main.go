@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"time"
 
 	"github.com/mathantunes/arex_project/filestore"
 	"github.com/mathantunes/arex_project/invoice"
@@ -21,6 +22,7 @@ const (
 
 func main() {
 
+	time.Sleep(15 * time.Second)
 	fileManager := filestore.New()
 	//Create buckets
 	err := fileManager.CreateBucket(InvoicePreviewBucket)
@@ -32,7 +34,7 @@ func main() {
 		log.Println(err)
 	}
 
-	port = new(string)
+	var port = new(string)
 	*port = "5000"
 	*port = os.Getenv("GRPC_PORT")
 	runServer(fmt.Sprintf(":%v", *port))
@@ -50,6 +52,8 @@ func runServer(addr string) {
 		&validator.VIESValidator{},
 		queuer.New(),
 	})
+
+	log.Println("Running GRPC Server on", addr)
 
 	services.RegisterInvoiceGetterServer(grpcServer, &invoice.GetterServer{})
 	grpcServer.Serve(lis)

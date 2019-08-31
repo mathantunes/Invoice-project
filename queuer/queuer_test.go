@@ -24,6 +24,7 @@ func TestQueuer_Init(t *testing.T) {
 	}
 	for _, tt := range tests {
 		// initSQSMocker()
+		endpoint = "localhost:9324"
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.q.Init(); (got != nil) == tt.wantNil {
 				t.Errorf("Queuer.Init() = %v, want %v", got, tt.wantNil)
@@ -50,6 +51,7 @@ func TestQueuer_CreateQueue(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		endpoint = "localhost:9324"
 		// initSQSMocker()
 		t.Run(tt.name, func(t *testing.T) {
 			if err := tt.q.CreateQueue(tt.args.name); (err != nil) != tt.wantErr {
@@ -74,11 +76,12 @@ func TestQueuer_GetQueueURL(t *testing.T) {
 			name:    "Success Get Queue URL",
 			q:       New(),
 			args:    args{"QUEUE_NAME"},
-			want:    "http://localhost:4576/queue/QUEUE_NAME",
+			want:    "http://localhost:9324/queue/QUEUE_NAME",
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
+		endpoint = "localhost:9324"
 		// initSQSMocker()
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := tt.q.GetQueueURL(tt.args.queueName)
@@ -107,11 +110,12 @@ func TestQueuer_WriteToQueue(t *testing.T) {
 		{
 			name:    "Success Write To Queue",
 			q:       New(),
-			args:    args{"http://localhost:4576/queue/QUEUE_NAME", []byte("Hello")},
+			args:    args{"http://localhost:9324/queue/QUEUE_NAME", []byte("Hello")},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
+		endpoint = "localhost:9324"
 		// initSQSMocker()
 		t.Run(tt.name, func(t *testing.T) {
 			if err := tt.q.WriteToQueue(tt.args.queueURL, tt.args.body); (err != nil) != tt.wantErr {
@@ -135,19 +139,20 @@ func TestQueuer_ReadFromQueue(t *testing.T) {
 		{
 			name:    "Success Read from QUEUE",
 			q:       New(),
-			args:    args{"http://localhost:4576/queue/QUEUE_NAME"},
+			args:    args{"http://localhost:9324/queue/QUEUE_NAME"},
 			want:    "Hello",
 			wantErr: false,
 		},
 		{
 			name:    "Non Existent Queue",
 			q:       New(),
-			args:    args{"http://localhost:4576/queue/UNEXISTING"},
+			args:    args{"http://localhost:9324/queue/UNEXISTING"},
 			want:    "",
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
+		endpoint = "localhost:9324"
 		t.Run(tt.name, func(t *testing.T) {
 			tt.q.WriteToQueue(tt.args.queueURL, []byte("Hello"))
 			got, err := tt.q.ReadFromQueue(tt.args.queueURL)

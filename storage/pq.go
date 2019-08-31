@@ -13,7 +13,7 @@ import (
 
 //The PSQL connection parameters where added as const values
 var host = os.Getenv("PSQL_HOST")
-var port = 5432
+var port = os.Getenv("PSQL_PORT")
 var user = os.Getenv("PSQL_USER")
 var password = os.Getenv("PSQL_PASS")
 
@@ -29,7 +29,7 @@ const (
 // QueryInvoice Operates the connection and transaction management for queries.
 // Takes a function for executing queries and commits all the changes on success
 func QueryInvoice(inv *services.InternalInvoice, fun func(*sql.Tx, *services.InternalInvoice) error) {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 

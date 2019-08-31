@@ -67,7 +67,7 @@ func (f *FileManager) ListItems(bucket, prefix string) (filenames []string, err 
 		Region:      aws.String("us-west-2")},
 	)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 
 	svc := s3.New(sess)

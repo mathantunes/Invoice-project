@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	region          = "elasticmq"
-	endpoint        = "http://localhost:9324"
+	region = "elasticmq"
+	// endpoint        = "http://localhost:9324"
+	endpoint        = "http://localhost:4576"
 	disableSSL      = true
 	accessKeyID     = "x"
 	secretAccessKey = "x"

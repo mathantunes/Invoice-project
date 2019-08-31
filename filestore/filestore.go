@@ -3,6 +3,7 @@ package filestore
 import (
 	"bytes"
 	"io"
+	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -11,8 +12,10 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
+// var endpoint = "http://localhost:4572"
+var endpoint = os.Getenv("S3_ENDPOINT")
+
 const (
-	endpoint        = "http://localhost:4572"
 	disableSSL      = true
 	accessKeyID     = "x"
 	secretAccessKey = "x"
@@ -69,7 +72,7 @@ func (f *FileManager) ListItems(bucket, prefix string) (filenames []string, err 
 
 	svc := s3.New(sess)
 	resp, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{Bucket: aws.String(bucket),
-	Prefix: aws.String(prefix)})
+		Prefix: aws.String(prefix)})
 	if err != nil {
 		return nil, err
 	}

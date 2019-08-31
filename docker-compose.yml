@@ -1,0 +1,41 @@
+version: '3'
+services:
+  invoice:
+    build: ./invoice_creator
+    environment:
+      GRPC_PORT: 5000
+      S3_ENDPOINT: "https://localhost:4572"
+      SQS_ENDPOINT: "http://localhost:4576"
+    ports:
+      - "4572:4572"
+      - "4576:4576"
+      - "5000:5000"
+
+  storage-op:
+    build: ./storage
+    environment:
+      SQS_ENDPOINT: http://localhost:4576
+      PSQL_HOST: "localhost" 
+      PSQL_USER: "postgres"
+      PSQL_PASS: "alstom"
+    ports:
+      - "5432:5432"
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: ""
+    ports:
+      - "15432:5432"
+    networks:
+      - postgres-compose-network
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4567-4584:4567-4584"
+      
+networks: 
+  postgres-compose-network:
+    driver: bridge
+
+
+

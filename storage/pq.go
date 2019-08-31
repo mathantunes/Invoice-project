@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"errors"
 
 	_ "github.com/lib/pq"
 	"github.com/mathantunes/arex_project/services"
@@ -74,6 +75,9 @@ func QueryInvoice(inv *services.InternalInvoice, fun func(*sql.Tx, *services.Int
 
 // insertAR Inserts a new Invoice into AR
 func insertAR(tx *sql.Tx, inv *services.InternalInvoice) error {
+	if tx == nil {
+		return errors.New("Tx is nil")
+	}
 	_, err := tx.Exec(`INSERT INTO "ar_invoices"
 	("customer_id", "invoice_number", "currency", "face_value", "counterparty_vat",
 	"counterparty_country", "issue_date", "due_date", "status", "company_name")

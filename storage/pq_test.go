@@ -52,7 +52,7 @@ func Test_insertAR(t *testing.T) {
 				ValidVAT:            true,
 				CompanyName:         "TestCompany",
 			}},
-			wantErr: false,
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
@@ -165,7 +165,7 @@ func Test_updateAR(t *testing.T) {
 }
 
 func initDB() *sql.Tx {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 

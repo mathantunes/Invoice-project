@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"time"
 
 	// "net"
 
@@ -25,6 +26,7 @@ const (
 
 func main() {
 
+	time.Sleep(10 * time.Second)
 	q := queuer.New()
 	// Create Insertion QUEUE
 	q.CreateQueue(CreateInvoiceQueue)

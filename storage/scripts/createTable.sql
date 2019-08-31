@@ -1,3 +1,4 @@
+CREATE DATABASE arex;
 
 -- SQL Script for Creating AP and AR invoice tables
 CREATE TABLE IF NOT EXISTS ap_invoices (

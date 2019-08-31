@@ -18,7 +18,7 @@ var user = os.Getenv("PSQL_USER")
 var password = os.Getenv("PSQL_PASS")
 
 const (
-	dbname = "arex"
+	dbname = "postgres"
 
 	// for simplicity, the status definitions were saved as const values
 	pendingStatus = "PENDING"

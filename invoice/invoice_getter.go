@@ -20,6 +20,7 @@ func (sv *GetterServer) GetInvoicePreview(req *services.QueryInvoice, stream ser
 	if req.GetInvoiceNumber() == 0 {
 		return errors.New("Got Invoice Number equal to zero")
 	}
+	fmt.Println("Received Invoice Preview Request for Invoice: %v", req.GetInvoiceNumber())
 	fileManager := filestore.New()
 	readerBytes, err := fileManager.Download(InvoicePreviewBucket, fmt.Sprintf("%v.pdf", req.GetInvoiceNumber()))
 	if err != nil {
@@ -45,10 +46,13 @@ func (sv *GetterServer) GetInvoicePreview(req *services.QueryInvoice, stream ser
 	}
 	return nil
 }
+
+// GetAttachments downloads all attachments for an Invoice
 func (sv *GetterServer) GetAttachments(req *services.QueryInvoice, stream services.InvoiceGetter_GetAttachmentsServer) error {
 	if req.GetInvoiceNumber() == 0 {
 		return errors.New("Got Invoice Number equal to zero")
 	}
+	fmt.Println("Received Attachments Request for Invoice: %v", req.GetInvoiceNumber())
 	fileManager := filestore.New()
 	filenames, err := fileManager.ListItems(AttachmentsBucket, fmt.Sprintf("%v", req.GetInvoiceNumber()))
 	if err != nil {
@@ -82,10 +86,13 @@ func (sv *GetterServer) GetAttachments(req *services.QueryInvoice, stream servic
 	}
 	return nil
 }
+
+// GetAttachment Downloads a single attachment
 func (sv *GetterServer) GetAttachment(req *services.QueryAttachment, stream services.InvoiceGetter_GetAttachmentServer) error {
 	if req.GetFilename() == "" {
 		return errors.New("Got Filename empty")
 	}
+	fmt.Println("Received Attachment Request for File: %v", req.GetFilename())
 	fileManager := filestore.New()
 	readerBytes, err := fileManager.Download(AttachmentsBucket, req.GetFilename())
 	if err != nil {
@@ -102,8 +109,8 @@ func (sv *GetterServer) GetAttachment(req *services.QueryAttachment, stream serv
 			return err
 		}
 		err = stream.Send(&services.AttachmentsResponse{
-			Data:       buffer[:n],
-			Filename:   req.GetFilename(),
+			Data:     buffer[:n],
+			Filename: req.GetFilename(),
 		})
 		if err != nil {
 			return err

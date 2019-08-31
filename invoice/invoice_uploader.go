@@ -38,6 +38,7 @@ const (
 // CreateXMLInvoice Accepts an Invoice Structure and parses all needed fields
 // Calls VAT validator and sends Protobuf payload to SQS
 func (sv *UploaderServer) CreateXMLInvoice(ctx context.Context, req *services.Invoice) (*services.Response, error) {
+	fmt.Println("Received New XML Invoice for Customer: %v", req.GetIssuerId())
 
 	//Get invoice data from XML
 	invoice, err := parseInvoiceInfo(req)
@@ -95,11 +96,14 @@ func (sv *UploaderServer) CreateXMLInvoice(ctx context.Context, req *services.In
 	}()
 	wg.Wait()
 
-	return nil, nil
+	return &services.Response{
+		Status: services.EStatus_Ok,
+	}, nil
 }
 
 // UpdateInvoicePreview receives stream of data for file and store file
 func (sv *UploaderServer) UpdateInvoicePreview(stream services.InvoiceUploader_UpdateInvoicePreviewServer) error {
+	fmt.Println("Received Update Invoice Preview for InvoiceNumber: %v", req.GetInvoiceNumber())
 	var fileBytes []byte
 	var invoiceNumber int64
 	for {
@@ -159,7 +163,7 @@ END:
 	//Initialize File Storage
 	fileManager := filestore.New()
 	//Upload file
-	err := fileManager.Upload(AttachmentsBucket, fmt.Sprintf("%v/_%v.pdf", invoiceNumber, time.Now().Unix()), bytes.NewReader(fileBytes))
+	err := fileManager.Upload(AttachmentsBucket, fmt.Sprintf("%v_%v.pdf", invoiceNumber, time.Now().Unix()), bytes.NewReader(fileBytes))
 	return err
 }
 
@@ -170,6 +174,7 @@ func (sv *UploaderServer) UpdateCounterPartyVAT(ctx context.Context, req *servic
 		return nil, errors.New("UpdateCounterPartyVAT called with empty parameters")
 	}
 
+	fmt.Println("Received Update CounterParty for InvoiceNumber: %v", req.GetInvoiceNumber())
 	//Call validator
 	validationResponse, err := sv.Validate(req.GetCountry(), req.GetVAT())
 	if err != nil {
@@ -198,5 +203,7 @@ func (sv *UploaderServer) UpdateCounterPartyVAT(ctx context.Context, req *servic
 	//Send to QUEUE
 	err = sv.WriteToQueue(url, []byte(encoded))
 
-	return nil, err
+	return &services.Response{
+		Status: services.EStatus_Ok,
+	}, err
 }

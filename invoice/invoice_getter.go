@@ -22,7 +22,7 @@ func (sv *GetterServer) GetInvoicePreview(req *services.QueryInvoice, stream ser
 	if req.GetInvoiceNumber() == 0 {
 		return errors.New("Got Invoice Number equal to zero")
 	}
-	log.Println("Received Invoice Preview Request for Invoice: %v", req.GetInvoiceNumber())
+	log.Println("Received Invoice Preview Request for Invoice: ", req.GetInvoiceNumber())
 	fileManager := filestore.New()
 	readerBytes, err := fileManager.Download(InvoicePreviewBucket, fmt.Sprintf("%v.pdf", req.GetInvoiceNumber()))
 	if err != nil {
@@ -55,7 +55,7 @@ func (sv *GetterServer) GetAttachments(ctx context.Context, req *services.QueryI
 	if req.GetInvoiceNumber() == 0 {
 		return &services.AttachmentsResponse{}, errors.New("Got Invoice Number equal to zero")
 	}
-	log.Println("Received Attachments Request for Invoice: %v", req.GetInvoiceNumber())
+	log.Println("Received Attachments Request for Invoice: ", req.GetInvoiceNumber())
 	fileManager := filestore.New()
 	filenames, err := fileManager.ListItems(AttachmentsBucket, fmt.Sprintf("%v", req.GetInvoiceNumber()))
 	if err != nil {
@@ -72,7 +72,7 @@ func (sv *GetterServer) GetAttachment(req *services.QueryAttachment, stream serv
 	if req.GetFilename() == "" {
 		return errors.New("Got Filename empty")
 	}
-	log.Println("Received Attachment Request for File: %v", req.GetFilename())
+	log.Println("Received Attachment Request for File: ", req.GetFilename())
 	fileManager := filestore.New()
 	readerBytes, err := fileManager.Download(AttachmentsBucket, req.GetFilename())
 	if err != nil {

@@ -39,7 +39,7 @@ const (
 // CreateXMLInvoice Accepts an Invoice Structure and parses all needed fields
 // Calls VAT validator and sends Protobuf payload to SQS
 func (sv *UploaderServer) CreateXMLInvoice(ctx context.Context, req *services.Invoice) (*services.Response, error) {
-	log.Println("Received New XML Invoice for Customer: %v", req.GetIssuerId())
+	log.Println("Received New XML Invoice for Customer: ", req.GetIssuerId())
 
 	//Get invoice data from XML
 	invoice, err := parseInvoiceInfo(req)
@@ -178,7 +178,7 @@ func (sv *UploaderServer) UpdateCounterPartyVAT(ctx context.Context, req *servic
 		return nil, errors.New("UpdateCounterPartyVAT called with empty parameters")
 	}
 
-	log.Println("Received Update CounterParty for InvoiceNumber: %v", req.GetInvoiceNumber())
+	log.Println("Received Update CounterParty for InvoiceNumber: ", req.GetInvoiceNumber())
 	//Call validator
 	validationResponse, err := sv.Validate(req.GetCountry(), req.GetVAT())
 	if err != nil {

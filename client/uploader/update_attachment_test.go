@@ -9,6 +9,7 @@ import (
 	"github.com/mathantunes/arex_project/services"
 	"google.golang.org/grpc"
 )
+
 // message Attachment {
 //     int64 InvoiceNumber = 1;
 //     bytes Content = 2;
@@ -20,7 +21,7 @@ func TestUpdateAttachment(t *testing.T) {
 	fileBytes := readFile("./testdata/current_invoice_attachment.pdf")
 	invoiceNumber := int64(10000)
 
-	addr := ":5000"
+	addr := ":6020"
 	chunckSize := 1000
 	/* INPUTS END */
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
@@ -45,10 +46,7 @@ func TestUpdateAttachment(t *testing.T) {
 		n, err := inputBuffer.Read(outBufferForStream)
 		if err != nil {
 			if err == io.EOF {
-				response, err := stream.CloseAndRecv()
-				if err != nil {
-					t.Error(err)
-				}
+				response, _ := stream.CloseAndRecv()
 				t.Log(response)
 				writing = false
 			}

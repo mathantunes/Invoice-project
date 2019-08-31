@@ -14,7 +14,8 @@ import (
 func TestGetAttachments(t *testing.T) {
 	/* INPUTS */
 	invoiceNumber := int64(10000)
-	addr := ":5050"
+	addr := ":6020"
+	/* INPUTS */
 
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
@@ -29,7 +30,7 @@ func TestGetAttachments(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	outputBytes := make([]byte, 100000)
+	outputBytes := make([]byte, 1000000)
 	files := make(map[string][]byte)
 	for {
 		attachments, err := stream.Recv()
@@ -37,18 +38,24 @@ func TestGetAttachments(t *testing.T) {
 			if err == io.EOF {
 				goto END
 			}
-			t.Error(err)
+			fmt.Println(err)
+			goto END
 		}
 
+		fmt.Printf("append")
 		outputBytes = append(outputBytes, attachments.GetData()...)
 		files[attachments.GetFilename()] = outputBytes
 	}
 END:
+	fmt.Printf("END")
 	for key, value := range files {
 		f, err := os.Create(fmt.Sprintf("./testdata/%v.pdf", key))
 		if err != nil {
 			t.Error(err)
 		}
-		f.Write(value)
+		_, err = f.Write(value)
+		if err != nil {
+			t.Error(err)
+		}
 	}
 }

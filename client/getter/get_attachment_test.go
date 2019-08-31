@@ -13,7 +13,7 @@ import (
 func TestGetAttachment(t *testing.T) {
 	/* INPUTS */
 	filename := "1000"
-	addr := ":5050"
+	addr := ":6021"
 
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {

@@ -3,7 +3,9 @@ package main
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
+	"log"
 	"testing"
 
 	"github.com/mathantunes/arex_project/services"
@@ -13,9 +15,9 @@ import (
 func TestUpdateInvoicePreview(t *testing.T) {
 	/* INPUTS */
 	fileBytes := readFile("./testdata/current_invoice_preview.pdf")
-	invoiceNumber := int64(10000)
+	invoiceNumber := int64(90000)
 
-	addr := ":5000"
+	addr := ":6020"
 	chunckSize := 1000
 	/* INPUTS END */
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
@@ -35,20 +37,22 @@ func TestUpdateInvoicePreview(t *testing.T) {
 	inputBuffer := bytes.NewReader(fileBytes)
 	outBufferForStream := make([]byte, chunckSize)
 	writing := true
-
+	fmt.Println(len(fileBytes))
 	for writing {
 		n, err := inputBuffer.Read(outBufferForStream)
 		if err != nil {
 			if err == io.EOF {
-				response, err := stream.CloseAndRecv()
-				if err != nil {
-					t.Error(err)
-				}
+				response, _ := stream.CloseAndRecv()
+				// if err != nil {
+				// 	t.Error(err)
+				// 	return
+				// }
 				t.Log(response)
 				writing = false
 			}
 			t.Log(err)
 		}
+		log.Println("SEnding chunk")
 		stream.Send(&services.InvoicePreview{
 			Preview:       outBufferForStream[:n],
 			InvoiceNumber: invoiceNumber,

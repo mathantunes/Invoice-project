@@ -29,10 +29,10 @@ var readFile = func(filename string) []byte {
 func TestCreateXMLInvoice(t *testing.T) {
 	/* INPUTS */
 	fileBytes := readFile("./testdata/current_invoice.xml")
-	addr := ":5000"
+	addr := ":6020"
 
 	//INVOICE INPUTS
-	issuerID := "AAEEBC99-9C0B-4EF8-BB6D-6BB9BD380A10"
+	issuerID := "AAEEBC99-9C0B-4EF8-BB6D-6BB9BE380A11"
 	invoiceType := services.InvoiceType_AP //services.InvoiceType_AR
 	/* INPUTS END */
 

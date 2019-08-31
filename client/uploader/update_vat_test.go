@@ -11,10 +11,10 @@ import (
 func TestUpdateVAT(t *testing.T) {
 	/* INPUTS */
 	invoiceType := services.InvoiceType_AP //services.InvoiceType_AR
-	invoiceNumber := int64(10000)
-	newVAT := "A123123"
+	invoiceNumber := int64(90000)
+	newVAT := "321321"
 	newCountry := "FI"
-	addr := ":5000"
+	addr := ":6020"
 	/* INPUTS END */
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
@@ -25,13 +25,13 @@ func TestUpdateVAT(t *testing.T) {
 	client := services.NewInvoiceUploaderClient(conn)
 
 	response, err := client.UpdateCounterPartyVAT(context.Background(), &services.CounterPartyVAT{
-		VAT: newVAT,
-		Country: newCountry,
+		VAT:           newVAT,
+		Country:       newCountry,
 		InvoiceNumber: invoiceNumber,
-		Type: invoiceType,
+		Type:          invoiceType,
 	})
 	if err != nil {
 		t.Error(err)
 	}
-	t.Log(response)	
+	t.Log(response)
 }

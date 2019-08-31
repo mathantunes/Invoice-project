@@ -1,12 +1,22 @@
 package filestore
 
 import (
+	"bytes"
 	"io"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+)
+
+const (
+	endpoint        = "http://localhost:4572"
+	disableSSL      = true
+	accessKeyID     = "x"
+	secretAccessKey = "x"
+	secretToken     = "x"
 )
 
 // FileManager Defines the structure used to manage the Files on Amazon S3
@@ -22,7 +32,10 @@ func New() *FileManager {
 // CreateBucket to store files
 func (f *FileManager) CreateBucket(name string) error {
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("us-west-2")},
+		Endpoint:    aws.String(endpoint),
+		DisableSSL:  aws.Bool(disableSSL),
+		Credentials: credentials.NewStaticCredentials(accessKeyID, secretAccessKey, secretToken),
+		Region:      aws.String("us-west-2")},
 	)
 	if err != nil {
 		return nil
@@ -43,10 +56,38 @@ func (f *FileManager) CreateBucket(name string) error {
 	return err
 }
 
+func (f *FileManager) ListItems(bucket, prefix string) (filenames []string, err error) {
+	sess, err := session.NewSession(&aws.Config{
+		Endpoint:    aws.String(endpoint),
+		DisableSSL:  aws.Bool(disableSSL),
+		Credentials: credentials.NewStaticCredentials(accessKeyID, secretAccessKey, secretToken),
+		Region:      aws.String("us-west-2")},
+	)
+	if err != nil {
+		return nil, nil
+	}
+
+	svc := s3.New(sess)
+	resp, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{Bucket: aws.String(bucket),
+	Prefix: aws.String(prefix)})
+	if err != nil {
+		return nil, err
+	}
+
+	filenames = make([]string, len(resp.Contents))
+	for index, item := range resp.Contents {
+		filenames[index] = *item.Key
+	}
+	return filenames, nil
+}
+
 // Upload file to bucket
 func (f *FileManager) Upload(bucket, filename string, reader io.Reader) error {
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("us-west-2")},
+		Endpoint:    aws.String(endpoint),
+		DisableSSL:  aws.Bool(disableSSL),
+		Credentials: credentials.NewStaticCredentials(accessKeyID, secretAccessKey, secretToken),
+		Region:      aws.String("us-west-2")},
 	)
 	if err != nil {
 		return err
@@ -62,18 +103,23 @@ func (f *FileManager) Upload(bucket, filename string, reader io.Reader) error {
 }
 
 // Download File from bucket
-func (f *FileManager) Download(file io.WriterAt, bucket, filename string) (int64, error) {
+func (f *FileManager) Download(bucket, filename string) (io.Reader, error) {
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("us-west-2")},
+		Endpoint:    aws.String(endpoint),
+		DisableSSL:  aws.Bool(disableSSL),
+		Credentials: credentials.NewStaticCredentials(accessKeyID, secretAccessKey, secretToken),
+		Region:      aws.String("us-west-2")},
 	)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 	downloader := s3manager.NewDownloader(sess)
-	numBytes, err := downloader.Download(file,
+	buffer := aws.NewWriteAtBuffer([]byte{})
+	_, err = downloader.Download(buffer,
 		&s3.GetObjectInput{
 			Bucket: aws.String(bucket),
 			Key:    aws.String(filename),
 		})
-	return numBytes, err
+
+	return bytes.NewReader(buffer.Bytes()), err
 }

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	"github.com/mathantunes/arex_project/filestore"
 	"github.com/mathantunes/arex_project/invoice"
@@ -32,8 +32,9 @@ func main() {
 		log.Println(err)
 	}
 
-	port := flag.String("port", "5000", "grpc port for listener")
-	flag.Parse()
+	port = new(string)
+	*port = "5000"
+	*port = os.Getenv("GRPC_PORT")
 	runServer(fmt.Sprintf(":%v", *port))
 
 }
@@ -51,6 +52,5 @@ func runServer(addr string) {
 	})
 
 	services.RegisterInvoiceGetterServer(grpcServer, &invoice.GetterServer{})
-	// pb.RegisterRouteGuideServer(grpcServer, &routeGuideServer{})
 	grpcServer.Serve(lis)
 }

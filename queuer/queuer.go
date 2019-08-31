@@ -14,7 +14,7 @@ import (
 var endpoint = os.Getenv("SQS_ENDPOINT")
 
 const (
-	region = "elasticmq"
+	region = "us-west-2"
 	// endpoint        = "http://localhost:9324"
 	disableSSL      = true
 	accessKeyID     = "x"

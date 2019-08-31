@@ -2,9 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"io"
-	"os"
+	"log"
 	"testing"
 
 	"github.com/mathantunes/arex_project/services"
@@ -13,7 +11,7 @@ import (
 
 func TestGetAttachments(t *testing.T) {
 	/* INPUTS */
-	invoiceNumber := int64(90000)
+	invoiceNumber := int64(10000)
 	addr := ":6020"
 	/* INPUTS */
 
@@ -30,5 +28,5 @@ func TestGetAttachments(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	t.Log(resp)
+	log.Println("Files: ", resp.GetFilenames())
 }

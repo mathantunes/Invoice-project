@@ -163,7 +163,7 @@ END:
 	//Initialize File Storage
 	fileManager := filestore.New()
 	//Upload file
-	err := fileManager.Upload(AttachmentsBucket, fmt.Sprintf("%v_%v.pdf", invoiceNumber, time.Now().Unix()), bytes.NewReader(fileBytes))
+	err := fileManager.Upload(AttachmentsBucket, fmt.Sprintf("%v/%v.pdf", invoiceNumber, time.Now().Unix()), bytes.NewReader(fileBytes))
 	return err
 }
 

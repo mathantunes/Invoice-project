@@ -4,19 +4,21 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	_ "github.com/lib/pq"
 	"github.com/mathantunes/arex_project/services"
 )
 
+//The PSQL connection parameters where added as const values
+var host = os.Getenv("PSQL_HOST")
+var port = 5432
+var user = os.Getenv("PSQL_USER")
+var password = os.Getenv("PSQL_PASS")
+
 const (
-	//The PSQL connection parameters where added as const values
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "alstom"
-	dbname   = "arex"
+	dbname = "arex"
 
 	// for simplicity, the status definitions were saved as const values
 	pendingStatus = "PENDING"

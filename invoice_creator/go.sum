@@ -2,6 +2,8 @@ cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMT
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/aws/aws-sdk-go v1.23.12 h1:2UnxgNO6Y5J1OrkXS8XNp0UatDxD1bWHiDT62RDPggI=
 github.com/aws/aws-sdk-go v1.23.12/go.mod h1:KmX6BPdI08NWTb3/sm4ZGu5ShLoqVDhKgpiN924inxo=
+github.com/aws/aws-sdk-go v1.23.13 h1:l/NG+mgQFRGG3dsFzEj0jw9JIs/zYdtU6MXhY1WIDmM=
+github.com/aws/aws-sdk-go v1.23.13/go.mod h1:KmX6BPdI08NWTb3/sm4ZGu5ShLoqVDhKgpiN924inxo=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
 github.com/golang/mock v1.1.1/go.mod h1:oTYuIxOrZwtPieC+H1uAHpcLFnEyAGVDL/k47Jfbm0A=
@@ -13,6 +15,8 @@ github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af h1:pmfjZENx5i
 github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af/go.mod h1:Nht3zPeWKUH0NzdCt2Blrr5ys8VGpn0CEB0cQHVjt7k=
 github.com/mathantunes/arex_project v0.0.0-20190829221215-f2f249e73afd h1:QAMsNhcBj69O+4nOsUtDzJH/DAYhDhnjj1MCI0PmDxo=
 github.com/mathantunes/arex_project v0.0.0-20190829221215-f2f249e73afd/go.mod h1:P9DE/bF9A+3VK4rQioKYu6cf0GcqnLBDQ1HFA3s5pUE=
+github.com/mathantunes/arex_project/filestore v0.0.0-20190831001309-075443044342 h1:3TbI9m6zAlOYKtVXQH42UGKpfmBM8mi3s7gbkoaSkhc=
+github.com/mathantunes/arex_project/filestore v0.0.0-20190831001309-075443044342/go.mod h1:+tzBavKbnv/JkIVyO9KRRQN2/jfpWI3l8TN6T77jCRY=
 github.com/mathantunes/arex_project/queuer v0.0.0-20190829221215-f2f249e73afd h1:uIapK/5Y4DGV1J7CfpzMDDD2Neyfi7UKCT8FahgvOgc=
 github.com/mathantunes/arex_project/queuer v0.0.0-20190829221215-f2f249e73afd/go.mod h1:c94QDi4vk0alfyoL7gmrhP1YBQTeufbjpb22ODeDub4=
 github.com/mathantunes/arex_project/services v0.0.0-20190829221215-f2f249e73afd h1:rbVjFV3wZ08e5Hy8AINnuamDXp88es2PFfokPQvXILM=

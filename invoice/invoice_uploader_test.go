@@ -103,3 +103,54 @@ func (q *QueueMock) CreateQueue(queueURL string) error {
 }
 
 func (q *QueueMock) Init() error { return nil }
+
+func TestUploaderServer_UpdateCounterPartyVAT(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		req *services.CounterPartyVAT
+	}
+	tests := []struct {
+		name    string
+		sv      *UploaderServer
+		args    args
+		want    *services.Response
+		wantErr bool
+	}{
+		{
+			name: "UpdateCounterPartyVAT call on MOCK",
+			sv:   &UploaderServer{&ValidationMock{}, &QueueMock{}},
+			args: args{ctx: context.Background(),
+				req: &services.CounterPartyVAT{
+					Country:       "FI",
+					VAT:           "25160554",
+					InvoiceNumber: 1000,
+					Type:          services.InvoiceType_AR,
+				}},
+			want: nil,
+		},
+		{
+			name: "UpdateCounterPartyVAT call on Real QUEUE",
+			sv:   &UploaderServer{&ValidationMock{}, queuer.New()},
+			args: args{ctx: context.Background(),
+				req: &services.CounterPartyVAT{
+					Country:       "FI",
+					VAT:           "25160553",
+					InvoiceNumber: 10000,
+					Type:          services.InvoiceType_AR,
+				}},
+			want: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := tt.sv.UpdateCounterPartyVAT(tt.args.ctx, tt.args.req)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("UploaderServer.UpdateCounterPartyVAT() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("UploaderServer.UpdateCounterPartyVAT() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

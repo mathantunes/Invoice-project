@@ -7,9 +7,9 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"sync"
 	"time"
-	"log"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/mathantunes/arex_project/filestore"
@@ -114,7 +114,7 @@ func (sv *UploaderServer) UpdateInvoicePreview(stream services.InvoiceUploader_U
 				//Finished TRANSMISSION, use GOTO key word to go to END
 				goto END
 			}
-			return err
+			goto END
 		}
 		//Received nil byte chunk
 		if invoice.GetPreview() == nil {
@@ -131,6 +131,7 @@ END:
 	//Initialize File Storage
 	fileManager := filestore.New()
 	//Upload file
+	log.Println("Uploading Invoice Preview File")
 	err := fileManager.Upload(InvoicePreviewBucket, fmt.Sprintf("%v.pdf", invoiceNumber), bytes.NewReader(fileBytes))
 	return err
 }
@@ -148,7 +149,7 @@ func (sv *UploaderServer) UpdateAttachment(stream services.InvoiceUploader_Updat
 				//Finished TRANSMISSION, use GOTO key word to go to END
 				goto END
 			}
-			return err
+			goto END
 		}
 		//Received nil byte chunk
 		if invoice.GetContent() == nil {
@@ -165,6 +166,7 @@ END:
 	//Initialize File Storage
 	fileManager := filestore.New()
 	//Upload file
+	log.Println("Uploading Attachment Preview File")
 	err := fileManager.Upload(AttachmentsBucket, fmt.Sprintf("%v/%v.pdf", invoiceNumber, time.Now().Unix()), bytes.NewReader(fileBytes))
 	return err
 }

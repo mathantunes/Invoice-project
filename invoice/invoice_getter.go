@@ -1,6 +1,7 @@
 package invoice
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -49,43 +50,21 @@ func (sv *GetterServer) GetInvoicePreview(req *services.QueryInvoice, stream ser
 }
 
 // GetAttachments downloads all attachments for an Invoice
-func (sv *GetterServer) GetAttachments(req *services.QueryInvoice, stream services.InvoiceGetter_GetAttachmentsServer) error {
+func (sv *GetterServer) GetAttachments(ctx context.Context, req *services.QueryInvoice) (*services.AttachmentsResponse, error) {
+	// GetAttachments(req *services.QueryInvoice, stream services.InvoiceGetter_GetAttachmentsServer) error {
 	if req.GetInvoiceNumber() == 0 {
-		return errors.New("Got Invoice Number equal to zero")
+		return &services.AttachmentsResponse{}, errors.New("Got Invoice Number equal to zero")
 	}
 	log.Println("Received Attachments Request for Invoice: %v", req.GetInvoiceNumber())
 	fileManager := filestore.New()
 	filenames, err := fileManager.ListItems(AttachmentsBucket, fmt.Sprintf("%v", req.GetInvoiceNumber()))
 	if err != nil {
-		return err
+		return &services.AttachmentsResponse{}, err
 	}
-	for _, filename := range filenames {
-		readerBytes, err := fileManager.Download(AttachmentsBucket, fmt.Sprintf("%v.pdf", filename))
-		if err != nil {
-			return err
-		}
-
-		buffer := make([]byte, ChunckSize)
-		writing := true
-		for writing {
-			n, err := readerBytes.Read(buffer)
-			if err != nil {
-				if err == io.EOF {
-					writing = false
-				}
-				return err
-			}
-			err = stream.Send(&services.AttachmentsResponse{
-				InvoiceNumber: req.GetInvoiceNumber(),
-				Data:          buffer[:n],
-				Filename:      filename,
-			})
-			if err != nil {
-				return err
-			}
-		}
-	}
-	return nil
+	return &services.AttachmentsResponse{
+		InvoiceNumber: req.GetInvoiceNumber(),
+		Filenames:     filenames,
+	}, nil
 }
 
 // GetAttachment Downloads a single attachment

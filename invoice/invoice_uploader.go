@@ -9,6 +9,7 @@ import (
 	"io"
 	"sync"
 	"time"
+	"log"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/mathantunes/arex_project/filestore"
@@ -103,7 +104,7 @@ func (sv *UploaderServer) CreateXMLInvoice(ctx context.Context, req *services.In
 
 // UpdateInvoicePreview receives stream of data for file and store file
 func (sv *UploaderServer) UpdateInvoicePreview(stream services.InvoiceUploader_UpdateInvoicePreviewServer) error {
-	log.Println("Received Update Invoice Preview for InvoiceNumber: %v", req.GetInvoiceNumber())
+	log.Println("Received Update Invoice Preview")
 	var fileBytes []byte
 	var invoiceNumber int64
 	for {
@@ -136,6 +137,7 @@ END:
 
 // UpdateAttachment receives stream of data for file and store file
 func (sv *UploaderServer) UpdateAttachment(stream services.InvoiceUploader_UpdateAttachmentServer) error {
+	log.Println("Received Update Invoice Attachment")
 	var fileBytes []byte
 	var invoiceNumber int64
 	//Loop to receive incoming stream data

@@ -20,6 +20,8 @@ service InvoiceUploader {
 message CounterPartyVAT {
     string VAT = 1;
     string Country = 2;
+    int64 InvoiceNumber = 3;
+    InvoiceType Type = 4;
 }
 
 service InvoiceGetter {
@@ -27,17 +29,21 @@ service InvoiceGetter {
 
     rpc GetAttachments(QueryInvoice) returns (stream AttachmentsResponse) {}
 
-    rpc GetAttachment(QueryInvoice) returns (stream AttachmentsResponse) {}
+    rpc GetAttachment(QueryAttachment) returns (stream AttachmentsResponse) {}
+}
+
+message QueryAttachment {
+    string Filename = 1;
 }
 
 message QueryInvoice {
-    uint64 InvoiceNumber = 1;
+    int64 InvoiceNumber = 1;
 }
 
 message AttachmentsResponse {
     bytes Data = 1;
-    uint64 InvoiceNumber = 2;
-    uint64 AttachmentNumber = 3;
+    int64 InvoiceNumber = 2;
+    string Filename = 3;
 }
 
 //Identifies the AP or AR Invoice Types
@@ -60,18 +66,18 @@ message Invoice {
 
 
 message InvoicePreview {
-    int64 Invoice_Number = 1;
+    int64 InvoiceNumber = 1;
     bytes Preview = 2;
     string Issuer_id = 3;
-    string Counterparty_Vat = 4;
+    string CounterpartyVat = 4;
 }
 
 //Attachment pdf files to be sent through stream
 message Attachment {
-    int64 Invoice_Number = 1;
+    int64 InvoiceNumber = 1;
     bytes Content = 2;
     string Issuer_id = 3;
-    string Counterparty_Vat = 4;
+    string CounterpartyVat = 4;
 }
 
 

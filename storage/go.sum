@@ -13,10 +13,10 @@ github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af h1:pmfjZENx5i
 github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af/go.mod h1:Nht3zPeWKUH0NzdCt2Blrr5ys8VGpn0CEB0cQHVjt7k=
 github.com/lib/pq v1.2.0 h1:LXpIM/LZ5xGFhOpXAQUIMM1HdyqzVYM13zNdjCEEcA0=
 github.com/lib/pq v1.2.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
-github.com/mathantunes/arex_project/queuer v0.0.0-20190829221215-f2f249e73afd h1:uIapK/5Y4DGV1J7CfpzMDDD2Neyfi7UKCT8FahgvOgc=
-github.com/mathantunes/arex_project/queuer v0.0.0-20190829221215-f2f249e73afd/go.mod h1:c94QDi4vk0alfyoL7gmrhP1YBQTeufbjpb22ODeDub4=
-github.com/mathantunes/arex_project/services v0.0.0-20190829221215-f2f249e73afd h1:rbVjFV3wZ08e5Hy8AINnuamDXp88es2PFfokPQvXILM=
-github.com/mathantunes/arex_project/services v0.0.0-20190829221215-f2f249e73afd/go.mod h1:oqeyW6aHQZ7tnWzxFmqaxZxHfwmEiAhqHQIzNoNh+Js=
+github.com/mathantunes/arex_project/queuer v0.0.0-20190831024225-cbe66d98dfc4 h1:TERdKggvYUSOLI7SHTmEu238yUMR8CJh3hYs4imJkns=
+github.com/mathantunes/arex_project/queuer v0.0.0-20190831024225-cbe66d98dfc4/go.mod h1:c94QDi4vk0alfyoL7gmrhP1YBQTeufbjpb22ODeDub4=
+github.com/mathantunes/arex_project/services v0.0.0-20190831024225-cbe66d98dfc4 h1:5wUABMjSB7MRGJa5kIIZDFaKSj/tg+erHkLEIOOUCxg=
+github.com/mathantunes/arex_project/services v0.0.0-20190831024225-cbe66d98dfc4/go.mod h1:oqeyW6aHQZ7tnWzxFmqaxZxHfwmEiAhqHQIzNoNh+Js=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/lint v0.0.0-20190313153728-d0100b6bd8b3/go.mod h1:6SW0HCj/g11FgYtHlgUYUwCkIfeOF89ocIRzGO/8vkc=
 golang.org/x/net v0.0.0-20190311183353-d8887717615a h1:oWX7TPOiFAMXLq8o0ikBYfCJVlRHBcsciT5bXOrH628=

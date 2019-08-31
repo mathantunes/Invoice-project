@@ -3,39 +3,70 @@ services:
   invoice:
     build: ./invoice_creator
     environment:
-      GRPC_PORT: 5000
-      S3_ENDPOINT: "https://localhost:4572"
-      SQS_ENDPOINT: "http://localhost:4576"
+      GRPC_PORT: 6021
+      S3_ENDPOINT: "localstack:4572"
+      SQS_ENDPOINT: "elastiqmq:9324"
     ports:
-      - "4572:4572"
-      - "4576:4576"
-      - "5000:5000"
-
+      - "6000:6000"
+      - "6001:6001"
+      - "6020:6021"
+    depends_on:
+      - storage-op
+      - postgres
+      - localstack
+    links:
+      - localstack
   storage-op:
     build: ./storage
+    links:
+      - localstack
+      - postgres
+      - elastiqmq
     environment:
-      SQS_ENDPOINT: http://localhost:4576
-      PSQL_HOST: "localhost" 
+      SQS_ENDPOINT: "elastiqmq:9324"
+      PSQL_HOST: "postgres" 
+      PSQL_PORT: "5432"
       PSQL_USER: "postgres"
-      PSQL_PASS: "alstom"
+      PSQL_PASS: "arex"
+    ports:
+      - "6010:6010"
+    depends_on:
+      - postgres
+      - localstack
+      - elastiqmq
+  postgres:
+    # image: postgres
+    container_name: postgres
+    build: .
+    environment:
+      - POSTGRES_PASSWORD="arex"
+      - POSTGRES_DB="postgres"
+      - POSTGRES_USER="postgres"
+      - DEBUG=true
     ports:
       - "5432:5432"
-  postgres:
-    image: postgres
-    environment:
-      POSTGRES_PASSWORD: ""
-    ports:
-      - "15432:5432"
-    networks:
-      - postgres-compose-network
+    # networks:
+    #   - postgres-compose-network
+    volumes:
+      - ./storage/scripts/createTable.sql:/docker-entrypoint-initdb.d/init.sql
   localstack:
     image: localstack/localstack
     ports:
-      - "4567-4584:4567-4584"
-      
-networks: 
-  postgres-compose-network:
-    driver: bridge
+      # - "4567-4584:4567-4584"
+      - "4572:4572"
+      - "4576:4576"
+    environment:
+      - SERVICES=s3,sqs
+      - HOSTNAME_EXTERNAL=localstack
+  elastiqmq:
+    image: s12v/elasticmq
+    ports:
+      - "9324:9324"
+    volumes:
+      - /queuer/starter.conf:/opt/elastiqmq.conf
+# networks: 
+#   postgres-compose-network:
+#     driver: bridge
 
 
 

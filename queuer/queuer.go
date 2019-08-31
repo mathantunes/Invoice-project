@@ -2,6 +2,7 @@ package queuer
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -9,10 +10,12 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs"
 )
 
+// var endpoint = "http://localhost:4576"
+var endpoint = os.Getenv("SQS_ENDPOINT")
+
 const (
 	region = "elasticmq"
 	// endpoint        = "http://localhost:9324"
-	endpoint        = "http://localhost:4576"
 	disableSSL      = true
 	accessKeyID     = "x"
 	secretAccessKey = "x"

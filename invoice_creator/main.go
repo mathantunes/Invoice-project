@@ -1,5 +1,11 @@
 package main
 
+/*
+	Initializes all necessary buckets to store files.
+
+	Starts the GRPC Server with all services attached.
+*/
+
 import (
 	"fmt"
 	"log"
@@ -22,7 +28,10 @@ const (
 
 func main() {
 
-	time.Sleep(15 * time.Second)
+	//Remove this in production with AWS.
+	//This is done so the container initialization waits for elasticmq and localstack to initialize properly
+	time.Sleep(20 * time.Second)
+
 	fileManager := filestore.New()
 	//Create buckets
 	err := fileManager.CreateBucket(InvoicePreviewBucket)
@@ -53,8 +62,9 @@ func runServer(addr string) {
 		queuer.New(),
 	})
 
+	services.RegisterInvoiceGetterServer(grpcServer, &invoice.GetterServer{})
+
 	log.Println("Running GRPC Server on", addr)
 
-	services.RegisterInvoiceGetterServer(grpcServer, &invoice.GetterServer{})
 	grpcServer.Serve(lis)
 }

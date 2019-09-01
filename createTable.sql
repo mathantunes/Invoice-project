@@ -1,6 +1,6 @@
 -- CREATE DATABASE postgres;
 
-\connect postgres
+
 
 -- SQL Script for Creating AP and AR invoice tables
 CREATE TABLE IF NOT EXISTS ap_invoices (

@@ -38,9 +38,9 @@ services:
     container_name: postgres
     build: .
     environment:
-      - POSTGRES_PASSWORD="arex"
-      - POSTGRES_DB="postgres"
-      - POSTGRES_USER="postgres"
+      - POSTGRES_PASSWORD=arex
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
       - DEBUG=true
     ports:
       - "5432:5432"

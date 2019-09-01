@@ -4,7 +4,8 @@
 Testing the API
 
 Initialize the containers by running docker-compose up
-Run creatingTables bat to initialize the PostgreSQL database
+If the PSQL on docker does not run the initialization script "createTable.sql", 
+The creatingTables.bat has the intructions to initializa the database on docker.
 
 Inside the Client folder, there are test files for each functionality:
 

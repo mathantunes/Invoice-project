@@ -1,5 +1,8 @@
 FROM postgres
 
+# This image is based on postgres image
+# Added initialization script as PSQL Docker documentation requires
+
 WORKDIR /
 RUN mkdir -p /docker-entrypoint-initdb.d
 COPY createTable.sql  /docker-entrypoint-initdb.d/

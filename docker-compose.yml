@@ -35,7 +35,6 @@ services:
       - localstack
       - elastiqmq
   postgres:
-    # image: postgres
     container_name: postgres
     build: .
     environment:

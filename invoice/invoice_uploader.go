@@ -62,6 +62,7 @@ func (sv *UploaderServer) CreateXMLInvoice(ctx context.Context, req *services.In
 
 		//Marshal Payload as Protobuf serialization
 		payload, err := proto.Marshal(&inv)
+		//Encode to base64 because SQS only allows ASCII Encoding
 		encoded := base64.StdEncoding.EncodeToString(payload)
 		err = sv.WriteToQueue(url, []byte(encoded))
 		if err != nil {

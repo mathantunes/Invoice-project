@@ -7,10 +7,24 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/mathantunes/arex_project/queuer"
 	services "github.com/mathantunes/arex_project/services"
 	"github.com/mathantunes/arex_project/validator"
 )
+
+var initEnvResult = os.Setenv("S3_ENDPOINT", "localhost:4572")
+
+var readFile = func(filename string) []byte {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil
+	}
+
+	b, err := ioutil.ReadAll(file)
+	if err != nil {
+		return nil
+	}
+	return b
+}
 
 func TestUploaderServer_CreateXMLInvoice(t *testing.T) {
 	readFile := func(filename string) []byte {
@@ -47,21 +61,23 @@ func TestUploaderServer_CreateXMLInvoice(t *testing.T) {
 					Type:     services.InvoiceType_AP,
 				},
 				filePath: "./testdata/invoice.xml"},
-			want:    nil,
+			want: &services.Response{
+				Status: services.EStatus_Ok,
+			},
 			wantErr: false,
 		},
-		{
-			name: "Successful Call to real",
-			sv:   &UploaderServer{&ValidationMock{}, queuer.New()},
-			args: args{ctx: context.Background(),
-				req: &services.Invoice{
-					IssuerId: "A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A21",
-					Type:     services.InvoiceType_AP,
-				},
-				filePath: "./testdata/invoice.xml"},
-			want:    nil,
-			wantErr: false,
-		},
+		// {
+		// 	name: "Successful Call to real",
+		// 	sv:   &UploaderServer{&ValidationMock{}, queuer.New()},
+		// 	args: args{ctx: context.Background(),
+		// 		req: &services.Invoice{
+		// 			IssuerId: "A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A21",
+		// 			Type:     services.InvoiceType_AP,
+		// 		},
+		// 		filePath: "./testdata/invoice.xml"},
+		// 	want:    nil,
+		// 	wantErr: false,
+		// },
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -126,20 +142,22 @@ func TestUploaderServer_UpdateCounterPartyVAT(t *testing.T) {
 					InvoiceNumber: 1000,
 					Type:          services.InvoiceType_AR,
 				}},
-			want: nil,
+			want: &services.Response{
+				Status: services.EStatus_Ok,
+			},
 		},
-		{
-			name: "UpdateCounterPartyVAT call on Real QUEUE",
-			sv:   &UploaderServer{&ValidationMock{}, queuer.New()},
-			args: args{ctx: context.Background(),
-				req: &services.CounterPartyVAT{
-					Country:       "FI",
-					VAT:           "25160553",
-					InvoiceNumber: 10000,
-					Type:          services.InvoiceType_AR,
-				}},
-			want: nil,
-		},
+		// {
+		// 	name: "UpdateCounterPartyVAT call on Real QUEUE",
+		// 	sv:   &UploaderServer{&ValidationMock{}, queuer.New()},
+		// 	args: args{ctx: context.Background(),
+		// 		req: &services.CounterPartyVAT{
+		// 			Country:       "FI",
+		// 			VAT:           "25160553",
+		// 			InvoiceNumber: 10000,
+		// 			Type:          services.InvoiceType_AR,
+		// 		}},
+		// 	want: nil,
+		// },
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

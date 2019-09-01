@@ -1,5 +1,11 @@
 package queuer
 
+/*
+	The Queuer exposes API agnostic interface "QueueManager".
+
+	The Queuer struct implements the Amazon SQS Queuer through "QueueManager"
+*/
+
 import (
 	"fmt"
 	"os"
@@ -62,7 +68,6 @@ func (q *Queuer) Init() *sqs.SQS {
 func (q *Queuer) CreateQueue(name string) error {
 
 	svc := q.Init()
-	//For simplicity purposed, the Creation parameters will be done from hardcoded configuration
 	_, err := svc.CreateQueue(&sqs.CreateQueueInput{
 		QueueName: aws.String(name),
 		Attributes: map[string]*string{
@@ -92,14 +97,8 @@ func (q *Queuer) WriteToQueue(queueURL string, body []byte) error {
 	svc := q.Init()
 	_, err := svc.SendMessage(&sqs.SendMessageInput{
 		DelaySeconds: aws.Int64(10),
-		// MessageAttributes: map[string]*sqs.MessageAttributeValue{
-		// 	"Title": &sqs.MessageAttributeValue{
-		// 		DataType:    aws.String("String"),
-		// 		StringValue: aws.String("The Whistler"),
-		// 	}
-		// },
-		MessageBody: aws.String(string(body)),
-		QueueUrl:    aws.String(queueURL),
+		MessageBody:  aws.String(string(body)),
+		QueueUrl:     aws.String(queueURL),
 	})
 	return err
 }

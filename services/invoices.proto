@@ -1,22 +1,24 @@
 syntax = "proto3";
 package services;
-/*
-    Definition of services related to invoice creation
-*/
 
+/*
+    Definition of services related to invoice creation and update
+*/
 service InvoiceUploader {
-    //Service to create XML Invoice
+    //CreateXMLInvoice Service to create XML Invoice
     rpc CreateXMLInvoice(Invoice) returns (Response) {}
 
-    //Service to upload invoice preview as a stream
+    //UpdateInvoicePreview Service to upload invoice preview as a stream
     rpc UpdateInvoicePreview(stream InvoicePreview) returns (Response) {}
 
-    //Service to upload invoice attachment as a stream
+    //UpdateAttachment Service to upload invoice attachment as a stream
     rpc UpdateAttachment(stream Attachment) returns (Response) {}
 
+    //UpdateCounterPartyVAT Service to update invoice VAT
     rpc UpdateCounterPartyVAT(CounterPartyVAT) returns (Response){}
 }
 
+// CounterPartyVAT Message format for Updating the Invoice VAT
 message CounterPartyVAT {
     string VAT = 1;
     string Country = 2;
@@ -24,22 +26,31 @@ message CounterPartyVAT {
     InvoiceType Type = 4;
 }
 
+/*
+    Definition of services related to invoice querying
+*/
 service InvoiceGetter {
+    // GetInvoicePreview Downloads the Invoice preview as a stream
     rpc GetInvoicePreview(QueryInvoice) returns (stream InvoicePreview) {}
 
+    // GetAttachments Gets all Attachments of an Invoice
     rpc GetAttachments(QueryInvoice) returns (AttachmentsResponse) {}
 
+    // GetAttachment Downloads a single Attachment of na Invoice as a stream
     rpc GetAttachment(QueryAttachment) returns (stream AttachmentsResponse) {}
 }
 
+// QueryAttachment to download single Attachment of an Invoice
 message QueryAttachment {
     string Filename = 1;
 }
 
+// QueryInvoice used to search for an Invoice
 message QueryInvoice {
     int64 InvoiceNumber = 1;
 }
 
+// AttachmentsResponse for downloading or requesting attachments
 message AttachmentsResponse {
     bytes Data = 1;
     int64 InvoiceNumber = 2;
@@ -65,7 +76,7 @@ message Invoice {
     InvoiceType Type = 4;
 }
 
-
+// InvoicePreview data format for Invoice Download
 message InvoicePreview {
     int64 InvoiceNumber = 1;
     bytes Preview = 2;
@@ -82,12 +93,12 @@ message Attachment {
 }
 
 
-//Status Enumeration
+//eStatus Enumeration of response
 enum eStatus {
     Error = 0;
     Ok = 1;
 }
-//Response for Invoice services
+//Response for Invoice Update services
 message Response {
     eStatus Status = 1;
     string Description = 2;

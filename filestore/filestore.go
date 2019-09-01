@@ -1,5 +1,8 @@
 package filestore
 
+/*
+	Filestore manages the file storage on Amazon S3
+*/
 import (
 	"bytes"
 	"io"
@@ -15,6 +18,7 @@ import (
 // var endpoint = "http://localhost:4572"
 var endpoint = os.Getenv("S3_ENDPOINT")
 
+//Static configuration of amazon session
 const (
 	disableSSL      = true
 	accessKeyID     = "x"
@@ -59,6 +63,7 @@ func (f *FileManager) CreateBucket(name string) error {
 	return err
 }
 
+// ListItems Returns all files that starts with the prefix parameter
 func (f *FileManager) ListItems(bucket, prefix string) (filenames []string, err error) {
 	sess, err := session.NewSession(&aws.Config{
 		Endpoint:    aws.String(endpoint),
@@ -71,12 +76,15 @@ func (f *FileManager) ListItems(bucket, prefix string) (filenames []string, err 
 	}
 
 	svc := s3.New(sess)
-	resp, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{Bucket: aws.String(bucket),
-		Prefix: aws.String(prefix)})
+	resp, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{
+		Bucket: aws.String(bucket),
+		Prefix: aws.String(prefix),
+	})
 	if err != nil {
 		return nil, err
 	}
 
+	//Initialize an array of filename
 	filenames = make([]string, len(resp.Contents))
 	for index, item := range resp.Contents {
 		filenames[index] = *item.Key
@@ -105,7 +113,7 @@ func (f *FileManager) Upload(bucket, filename string, reader io.Reader) error {
 	return err
 }
 
-// Download File from bucket
+// Download file from bucket
 func (f *FileManager) Download(bucket, filename string) (io.Reader, error) {
 	sess, err := session.NewSession(&aws.Config{
 		Endpoint:    aws.String(endpoint),

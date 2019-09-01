@@ -61,12 +61,12 @@ func TestFileManager_Upload(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Upload to S3",
+			name: "Upload invoice preview to S3 on testfile",
 			f:    New(),
 			args: args{"preview_bucket", "testfile", bytes.NewReader(readFile("../samples/invoice_preview.pdf"))},
 		},
 		{
-			name: "Upload to S3",
+			name: "Upload invoice preview to S3 on test/1",
 			f:    New(),
 			args: args{"preview_bucket", "test/1", bytes.NewReader(readFile("../samples/invoice_preview.pdf"))},
 		},

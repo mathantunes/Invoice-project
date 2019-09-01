@@ -1,15 +1,16 @@
 
 # arex_project
 
-Testing the API
+# Testing the API
 
-Initialize the containers by running docker-compose up
+Initialize the containers by running docker-compose up.
+
 If the PSQL on docker does not run the initialization script "createTable.sql", 
 The creatingTables.bat has the intructions to initializa the database on docker.
 
 Inside the Client folder, there are test files for each functionality:
 
-1) Uploader: From the uploader folder
+# 1) Uploader: From the uploader folder
     Run "go test -run TestCreateXMLInvoice" to test the invoice creation.
     This test utilizes the "current_invoice.xml" file to upload.
     The Extra parameters are defined in the Beginning of the function
@@ -33,7 +34,7 @@ Inside the Client folder, there are test files for each functionality:
     c) Input newVAT
     d) Input newCountry
 
-2) Getter: from the getter folder
+# 2) Getter: from the getter folder
     Run "go test -run TestGetInvoicePreview" to test the Invoice Preview Download.
     This test outputs the file to "testdata" folder on "current_get_invoice_preview.pdf" file.
     The Extra parameters are defined in the Beginning of the function

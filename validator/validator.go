@@ -1,11 +1,8 @@
 package validator
 
 /*
-	Validator V0.0.1
-	27.08.2019
-
 	The package communicates with VIES API as a SOAP service
-
+	It exposes the Validate method to validate a company VAT
 */
 
 import (

@@ -1,5 +1,15 @@
 package main
 
+/*
+	The Storage manages database insertions and updates.
+
+	It reads from the SQS queue and dispatches to database logic.
+
+	To read from SQS queue, there are concurrent workers defined by "QueueWorkers"
+
+	The database insertions are commited as transactions
+*/
+
 import (
 	"encoding/base64"
 	"fmt"
@@ -26,6 +36,8 @@ const (
 
 func main() {
 
+	//Remove this in production.
+	//This is done so that the elasticmq SQS Mocker can initialize properly before we start creating queues
 	time.Sleep(10 * time.Second)
 	q := queuer.New()
 	// Create Insertion QUEUE

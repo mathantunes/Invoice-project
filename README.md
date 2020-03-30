@@ -1,5 +1,5 @@
 
-# arex_project
+# Invoice Project
 
    # Testing the API
 
